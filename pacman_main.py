@@ -3,4 +3,4 @@ import pygame
 
 class player_obj:
     def __init__(self):
-        
+        print("TEST")
