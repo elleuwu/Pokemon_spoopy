@@ -1,6 +1,4 @@
 #container file for pacman
-import pygame
+print("haha bitch")
 
-class player_obj:
-    def __init__(self):
        
