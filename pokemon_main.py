@@ -1,6 +1,6 @@
 import pygame,sys
-from config import *
-from sprites import *
+from pokemon_config import *
+from pokemon_sprites import *
 
 class mainGame:
     
