@@ -1,6 +1,22 @@
 import pygame
 class SpriteSheet:
+    def __init__(self,spritesheet):
+        self.spritesheet = pygame.image.load(spritesheet).convert()
+        
+    def spec_sprite(self,rectangle):
+        rect = pygame.Rect(rectangle)
+        sprite_img = pygame.Surface(rect.size).convert()
 
+        sprite_img.blit(self.spritesheet,(0,0),rect)
+        sprite_img.set_colorkey((0,0,0))
+
+        return sprite_img
+
+    def multi_sprite(self,rects):
+        sprites = []
+        for elem in rects:
+            sprites.append(self.spec_sprite(elem))
+        return sprites
 
     
 
