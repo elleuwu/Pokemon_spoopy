@@ -1,11 +1,12 @@
 import pygame
+
 class SpriteSheet:
     def __init__(self,spritesheet):
-        self.spritesheet = pygame.image.load(spritesheet).convert()
+        self.spritesheet = pygame.image.load(spritesheet)
         
     def spec_sprite(self,rectangle):
         rect = pygame.Rect(rectangle)
-        sprite_img = pygame.Surface(rect.size).convert()
+        sprite_img = pygame.Surface(rect.size)
 
         sprite_img.blit(self.spritesheet,(0,0),rect)
         sprite_img.set_colorkey((0,0,0))
@@ -18,8 +19,21 @@ class SpriteSheet:
             sprites.append(self.spec_sprite(elem))
         return sprites
 
-    
+class background_env(pygame.sprite.Sprite):
+    def __init__(self,mainGame,config):
+        pygame.sprite.Sprite.__init__(self)
 
+        self.screen = mainGame.screen
+        self.config = config
+
+        self.background_sprite = mainGame.env_sprites.spec_sprite((384,352,32,32))
+
+        self.sprite_rect = self.background_sprite.get_rect()
+        
+    def blit_env(self):
+        for x in range(0,self.config.screen_width,32):
+            for y in range(0,self.config.screen_height,32):
+                self.screen.blit(self.background_sprite,(x,y))
 
 class Player:
     def __init__(self,main_game):
@@ -29,8 +43,3 @@ class Player:
         self.screen = main_game.screen
 
         self.x, self.y = 0.0,0.0
-
-    def blitplayer(self):
-        self.rect = self.image.get_rect()
-        self.rect.topleft = self.x,self.y
-        self.screen.blit(self.image,self.rect)

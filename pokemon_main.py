@@ -10,14 +10,18 @@ class mainGame:
         pygame.init()
 
         self.config = Config()
-        self.sprites = SpriteSheet("img//character.png")
+        self.player_sprites = SpriteSheet("sprites//character.png")
+        self.env_sprites = SpriteSheet("sprites//terrain.png")
         
         self.all_sprite_group = pygame.sprite.Group()
         self.player_sprite_group = pygame.sprite.Group()
         self.env_sprite_group = pygame.sprite.Group()
 
-        self.screen = pygame.display.set_mode((self.config.screen_width, self.config.screen_height),pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((self.config.screen_width, self.config.screen_height))
         pygame.display.set_caption("Pokemon Remake Early Alpha Test 01")
+
+        self.background = background_env(self,self.config)
+        self.background.add(self.all_sprite_group,self.env_sprite_group)
 
     def run_game(self):
         while True:
@@ -32,7 +36,8 @@ class mainGame:
                 if event.key == pygame.K_q:
                     sys.exit()
 
-        self.spritesheet.image_at(0,0,32,32)
+        self.background.blit_env()
+
 
 
     def updates(self):
