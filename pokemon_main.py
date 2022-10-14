@@ -17,7 +17,7 @@ class mainGame:
         self.player_sprite_group = pygame.sprite.Group()
         self.env_sprite_group = pygame.sprite.Group()
 
-        self.screen = pygame.display.set_mode((self.config.screen_width, self.config.screen_height))
+        self.screen = pygame.display.set_mode((self.config.screen_width, self.config.screen_height),pygame.FULLSCREEN)
         pygame.display.set_caption("Pokemon Remake Early Alpha Test 01")
 
         self.background = background_env(self,self.config)

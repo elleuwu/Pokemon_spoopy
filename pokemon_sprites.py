@@ -27,13 +27,25 @@ class background_env(pygame.sprite.Sprite):
         self.config = config
 
         self.background_sprite = mainGame.env_sprites.spec_sprite((384,352,32,32))
+        self.background_border = mainGame.env_sprites.spec_sprite((352,352,32,32))
 
         self.sprite_rect = self.background_sprite.get_rect()
         
     def blit_env(self):
-        for x in range(0,self.config.screen_width,32):
-            for y in range(0,self.config.screen_height,32):
-                self.screen.blit(self.background_sprite,(x,y))
+        x = 0
+        y = 0
+        for row in self.config.map:
+            for elem in row:
+                if elem == "B":
+                    self.screen.blit(self.background_sprite,(x,y))
+                    self.screen.blit(self.background_border,(x,y))
+                    x+=32
+                elif elem == ".":
+                    self.screen.blit(self.background_sprite,(x,y))
+                    x+=32
+            x=0
+            y+=32
+
 
 class Player:
     def __init__(self,main_game):
