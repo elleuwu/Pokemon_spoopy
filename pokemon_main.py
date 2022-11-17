@@ -10,7 +10,7 @@ class mainGame:
         pygame.init()
 
         self.config = Config()
-        self.player_sprites = SpriteSheet("sprites//Overworld_Trainers//Overworld_Trainers.png")
+        self.player_sprites = SpriteSheet("sprites//Dawn Trainer.png")
         self.env_sprites = SpriteSheet("sprites//terrain.png")
         
         self.all_sprite_group = pygame.sprite.Group()
@@ -22,6 +22,9 @@ class mainGame:
 
         self.background = background_env(self,self.config)
         self.background.add(self.all_sprite_group,self.env_sprite_group)
+
+        self.player = Player(self,self.config)
+        self.player.add(self.all_sprite_group,self.player_sprite_group)
 
     def run_game(self):
         while True:
@@ -37,6 +40,7 @@ class mainGame:
                     sys.exit()
 
         self.background.blit_env()
+        self.player.blit_player()
 
 
 

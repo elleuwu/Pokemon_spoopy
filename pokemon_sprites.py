@@ -4,12 +4,12 @@ class SpriteSheet:
     def __init__(self,spritesheet):
         self.spritesheet = pygame.image.load(spritesheet)
         
-    def spec_sprite(self,rectangle):
+    def spec_sprite(self,rectangle,colorkey):
         rect = pygame.Rect(rectangle)
         sprite_img = pygame.Surface(rect.size)
 
         sprite_img.blit(self.spritesheet,(0,0),rect)
-        sprite_img.set_colorkey((0,0,0))
+        sprite_img.set_colorkey(colorkey)
 
         return sprite_img
 
@@ -26,8 +26,8 @@ class background_env(pygame.sprite.Sprite):
         self.screen = mainGame.screen
         self.config = config
 
-        self.background_sprite = mainGame.env_sprites.spec_sprite((384,352,32,32))
-        self.background_border = mainGame.env_sprites.spec_sprite((352,352,32,32))
+        self.background_sprite = mainGame.env_sprites.spec_sprite((384,352,32,32),(0,0,0))
+        self.background_border = mainGame.env_sprites.spec_sprite((352,352,32,32),(0,0,0))
 
         self.sprite_rect = self.background_sprite.get_rect()
         
@@ -47,11 +47,17 @@ class background_env(pygame.sprite.Sprite):
             y+=32
 
 
-class Player:
-    def __init__(self,main_game):
-        self.sprite = None
+class Player(pygame.sprite.Sprite):
+    def __init__(self,mainGame,config):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.screen = mainGame.screen
+        self.config = config
+
+        self.sprite = mainGame.player_sprites.spec_sprite((172,2,32,32),(136,184,176))
         self.name = ''
 
-        self.screen = main_game.screen
-
         self.x, self.y = 0.0,0.0
+
+    def blit_player(self):
+        self.screen.blit(self.sprite,(500,500))

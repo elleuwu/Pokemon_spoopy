@@ -26,6 +26,7 @@
     <Compile Include="pokemon_sprites.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="sprites\Dawn Trainer.png" />
     <Content Include="sprites\Gen4_CombatTrainers\Gen4_TrainersCombat_0.png" />
     <Content Include="sprites\Gen4_CombatTrainers\Gen4_TrainersCombat_1.png" />
     <Content Include="sprites\Gen4_Frame1\Gen4_Frame1_0.png" />
@@ -38,7 +39,6 @@
     <Content Include="sprites\Gen4_Frame2\Gen4_Frame2_2.png" />
     <Content Include="sprites\Gen4_Frame2\Gen4_Frame2_3.png" />
     <Content Include="sprites\Gen4_Frame2\Gen4_Frame2_4.png" />
-    <Content Include="sprites\Overworld_Trainers\Overworld_Trainers.png" />
     <Content Include="sprites\terrain.png" />
   </ItemGroup>
   <ItemGroup>
@@ -46,7 +46,6 @@
     <Folder Include="sprites\Gen4_CombatTrainers\" />
     <Folder Include="sprites\Gen4_Frame1\" />
     <Folder Include="sprites\Gen4_Frame2\" />
-    <Folder Include="sprites\Overworld_Trainers\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
