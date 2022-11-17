@@ -10,7 +10,7 @@ class mainGame:
         pygame.init()
 
         self.config = Config()
-        self.player_sprites = SpriteSheet("sprites//character.png")
+        self.player_sprites = SpriteSheet("sprites//Overworld_Trainers//Overworld_Trainers.png")
         self.env_sprites = SpriteSheet("sprites//terrain.png")
         
         self.all_sprite_group = pygame.sprite.Group()
