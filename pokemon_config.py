@@ -2,41 +2,52 @@ import ctypes
 
 class Config:
     def __init__(self):
-        self.user32 = ctypes.windll.user32
-        self.screen_width = self.user32.GetSystemMetrics(0)    
-        self.screen_height = self.user32.GetSystemMetrics(1)
+
+        self.screen_width = 1248  
+        self.screen_height = 736
+
+        self.TRAINER_POKEMON_LAYER = 6
+        self.POKEMON_LAYER = 5
+        self.TRAINER_INTRO_LAYER = 4
+        self.PLAYER_LAYER = 4
+        self.GRASS_LAYER = 3
+        self.ENEMY_LAYER = 3
+        self.BLOCK_LAYER = 2
+        self.GROUND_LAYER = 1
+
+        self.TILESIZE = 32
 
         self.map = ["BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-                    "B.....................SSSSSSSSSSSSSSSSSSSSSSSSS............B",
-                    "B.....................SRRRRRRRRRRRRRRRRRRRRRRRS............B",
-                    "B.....................SR...T.....TT......T....S............B",
-                    "B.....................SR.SSSSSSSSSSSSSSSSSSSSSS............B",
-                    "B.....................SR...................................B",
-                    "B.....................SRRRRRRRRRRRRRRRRRRRRRRRRRRRR........B",
-                    "B.................................................R........B",
-                    "B......GGGGGGGGGGG................................R........B",
-                    "B......GGGGGGGGGGG................................R........B",
-                    "B......GGGGGGGGGGG................................R........B",
-                    "B......GGGGGGGGGGG................................R........B",
-                    "B...........T................GGGGGGGGGGGGGGGGGG.T.R........B",
-                    "B............................GGGGGGGGGGGGGGGGGG...R........B",
-                    "BRRRRRRRRRRRRRRRRRRRRRRRRR...GGGGGGGGGGGGGGGGGG.T.R........B",
-                    "B........................R...GGGGGGGGGGGGGGGGGG...R........B",
-                    "B........................R...GGGGGGGGGGGGGGGGGG...R..T.....B",
-                    "B........................R...GGGGGGGGGGGGGGGGGG...R........B",
-                    "B........................R...GGGGGGGGGGGGGGGGGG.T.R........B",
-                    "B........................R...GGGGGGGGGGGGGGGGGG...R..T.....B",
-                    "B..WWWWWWWWWWWWWWWWWWWW..R........................R........B",
-                    "B..WWWWWWWWWWWWWWWWWWWW..RRRRRRRRRRRRRRRRRRRRRRRRRR........B",
-                    "B..WWWWWWWWWWWWWWWWWWWW.......T.....T.........T............B",
-                    "B..WWWWWWWWWWWWWWWWWWWW....................................B",
-                    "B..WWWWWWWWWWWWWWWWWWWW....................................B",
-                    "B..WWWWWWWWWWWWWWWWWWWW....................................B",
-                    "B..WWWWWWWWWWWWWWWWWWWW....................................B",
-                    "B..WWWWWWWWWWWWWWWWWWWW....................................B",
-                    "B..WWWWWWWWWWWWWWWWWWWW....................................B",
-                    "B..WWWWWWWWWWWWWWWWWWWW....................................B",
                     "B..........................................................B",
                     "B..........................................................B",
+                    "B..........................................................B",
+                    "B............................T.......T.....................B",
+                    "B..................................................T.......B",
+                    "B..........................................................B",
+                    "B........GGGGGGG.................T.........................B",
+                    "B......GGGGGGGGGGG.........................................B",
+                    "B......GGGGGGGGGGG.........................................B",
+                    "B........GGGGGGG...........................................B",
+                    "B..................P.......................................B",
+                    "B............................GGGGGGGGGGGGGGGGGG............B",
+                    "B............................GGGGGGGGGGGGGGGGGG...T........B",
+                    "B............................GGGGGGGGGGGGGGGGGG.......T....B",
+                    "B.....T..T..T..T..T..........GGGGGGGGGGGGGGGGGG...T........B",
+                    "B............................GGGGGGGGGGGGGGGGGG.......T....B",
+                    "B............................GGGGGGGGGGGGGGGGGG...T........B",
+                    "B.......GGG..................GGGGGGGGGGGGGGGGGG.......T....B",
+                    "B......GGGGG.................GGGGGGGGGGGGGGGGGG...T........B",
+                    "B......GGGGG...............................................B",
+                    "B......GGGGG...............................................B",
+                    "B......GGGGG...............................................B",
+                    "B......GGGGG.............T...T...T...T...T...T...T.........B",
+                    "B......GGGGG...............................................B",
+                    "B......GGGGG...............................................B",
+                    "B....GGGGGGGGG.............................................B",
+                    "B..GGGGGG.GGGGGG...........................................B",
+                    "B..GGGGGG.GGGGGG...........................................B",
+                    "B..GGGGGG.GGGGGG...........................................B",
+                    "B..GGGGGG.GGGGGG...........................................B",
+                    "B....GG.....GG.............................................B",
                     "B..........................................................B",
                     "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"]
