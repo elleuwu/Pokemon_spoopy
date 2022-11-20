@@ -66,10 +66,15 @@ class mainGame:
 
         self.random_encounter_chance = 1.1
 
-        self.grass_encounter_video = cv2.VideoCapture('Videos\\Trainer encounter.mp4')
+        self.grass_encounter_video = cv2.VideoCapture('Videos\\Trainer encounter_Trim.mp4')
         self.grass_success, self.grass_encounter_frame = self.grass_encounter_video.read()
         self.grass_encounter_frame = cv2.resize(self.grass_encounter_frame,(1248,736))
         self.grass_shape = self.grass_encounter_frame.shape[1::-1]
+
+        self.background_rect = self.battle_background.get_rect()
+        self.background = pygame.Surface((self.background_rect.width,self.background_rect.height))
+        self.background.fill((255,255,255))
+        self.background.blit(self.battle_background,self.background_rect)
 
         self.encountered = False
         self.battle_music = False
@@ -78,6 +83,7 @@ class mainGame:
         self.text_state = 0
         self.mainText = NULL
         self.intro_anim = False
+        self.encounter_anim = False
 
         self.battle_music_list = ["Music\\Necrozma battle song.wav","Music\\Vs blue battle song.wav","Music\\Vs cyrus battle song.wav","Music\\Zekrom reshiram battle song.wav"]
 
@@ -113,7 +119,7 @@ class mainGame:
                     self.encounter_events()
                     self.updates()
                     self.wild_battle()
-                else:
+                elif self.in_battle:
                     while self.in_battle:
                         self.encounter_events()
                         self.updates_encounter()
@@ -149,6 +155,15 @@ class mainGame:
                     if self.text_state < 5:
                         if self.mainText.is_pressed(event.pos):
                             self.text_state+=1
+                    else:
+                        if self.fight.is_pressed(event.pos):
+                            self.text_state = 6
+                        if self.bag.is_pressed(event.pos):
+                            self.text_state = 7
+                        if self.Pokemon.is_pressed(event.pos):
+                            self.text_state = 8
+                        if self.run.is_pressed(event.pos):
+                            self.text_state = 9
 
         if self.canEncounter == True:
             if not self.enc_timer_started:
@@ -161,7 +176,7 @@ class mainGame:
 
 
     def wild_battle(self):
-        if self.random_encounter_chance <= 0.9:
+        if self.random_encounter_chance <= 0.5 and self.random_encounter_chance>0:
             self.encountered = True
 
         if self.encountered == True:
@@ -170,6 +185,7 @@ class mainGame:
             self.draw_encounter()
             self.in_battle = True
             self.turn = 0
+            self.encounter_anim = True
             self.mainText = Button(self,15,581,750,150,(0,0,0),(230,230,230),"","pokemon_pixel_font.ttf",70,False,2)
             self.mainTextOutline = Button(self,10,576,760,160,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
 
@@ -224,37 +240,39 @@ class mainGame:
         self.clock.tick(self.fps)
 
     def draw_encounter(self):
-        background_rect = self.battle_background.get_rect()
-        background = pygame.Surface((background_rect.width,background_rect.height))
-        background.blit(self.battle_background,background_rect)
-
         if self.turn == 0:
             self.mainText.text_state(self.text_state)
-            while self.grass_success:
+            frame_counter = 0
+            while self.encounter_anim:
+                frame_counter+=1
                 if self.encountered==True:
                     if self.battle_music:
                         pass
                     else:
+                        self.draw()
                         song = random.randint(0,3)
                         self.music = pygame.mixer.music.load(self.battle_music_list[song])
                         pygame.mixer.music.play(loops=-1)
                         self.battle_music = True
 
-                self.clock.tick(self.fps)
-                try:
-                    self.grass_success, self.grass_encounter_frame = self.grass_encounter_video.read()
-                    self.grass_encounter_frame = cv2.resize(self.grass_encounter_frame,(1248,736))
-                    surface = pygame.image.frombuffer(self.grass_encounter_frame.tobytes(), self.grass_shape, "BGR")
-                    surface.set_colorkey((15,250,5))
-                    self.screen.blit(surface,(0, 0))
-                    pygame.display.update()
+                    self.clock.tick(self.fps)
+                    if frame_counter != int(self.grass_encounter_video.get(cv2.CAP_PROP_FRAME_COUNT)):
+                        self.grass_success, self.grass_encounter_frame = self.grass_encounter_video.read()
+                        self.grass_encounter_frame = cv2.resize(self.grass_encounter_frame,(1248,736))
+                        surface = pygame.image.frombuffer(self.grass_encounter_frame.tobytes(), self.grass_shape, "BGR")
+                        print(surface.get_at((600,460)))
+                        surface.set_colorkey((15,250,5,255))
+                        self.screen.blit(surface,(0, 0))
+                        pygame.display.update()
                 
-                except:
-                    self.grass_success = False
+                    else:
+                        self.encounter_anim = False
+                        frame_counter = 0
+                        self.grass_encounter_video.set(cv2.CAP_PROP_POS_FRAMES,0)
 
-                pygame.display.update()
+                        pygame.display.update()
 
-            self.screen.blit(background,(0,0))
+            self.screen.blit(self.background,(0,0))
 
             if self.text_state >= 4:
                 self.trainer_pokemon_group.draw(self.screen)
@@ -279,6 +297,7 @@ class mainGame:
 
             self.clock.tick(self.fps)
             self.battle_sprite_group.draw(self.screen)
+
         pygame.display.update()
    
 
@@ -373,8 +392,6 @@ class mainGame:
                 self.random_encounter_chance = 1.1
 
             time.sleep(random.uniform(1.5, 2.5))
-
-
 
 
 

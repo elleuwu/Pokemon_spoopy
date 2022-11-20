@@ -342,6 +342,17 @@ class Button:
             self.text_rect = self.text.get_rect(center=(self.width/2,self.height/2))
             self.image.blit(self.text,self.text_rect)
 
+        elif state == 9:
+            self.mainGame.encountered = False
+            self.mainGame.in_battle = False
+            self.mainGame.random_encounter_chance = 0
+            self.mainGame.text_state = 0
+            self.mainGame.encountered_pokemon.kill()
+            self.mainGame.dawn.kill()
+            self.mainGame.dawnPokemon.kill()
+            self.mainGame.battle_music = False
+            self.mainGame.encounter_anim = False
+
 
 
 
@@ -396,7 +407,7 @@ class Pokemon(pygame.sprite.Sprite):
         self.mainGame = mainGame
         self.config = config
         self._layer = self.config.POKEMON_LAYER
-        self.groups = self.mainGame.all_sprite_group, self.mainGame.pokemon_sprite_group, self.mainGame.battle_sprite_group
+        self.groups = self.mainGame.pokemon_sprite_group, self.mainGame.battle_sprite_group
         pygame.sprite.Sprite.__init__(self,self.groups)
 
         self.x = x*self.config.TILESIZE
@@ -437,7 +448,7 @@ class DawnThrowPokemon(pygame.sprite.Sprite):
         self.mainGame = mainGame
         self.config = config
         self._layer = self.config.TRAINER_INTRO_LAYER
-        self.groups = self.mainGame.all_sprite_group, self.mainGame.trainer_intro_group
+        self.groups = self.mainGame.trainer_intro_group
         pygame.sprite.Sprite.__init__(self,self.groups)
 
         self.x = x*self.config.TILESIZE
@@ -484,7 +495,7 @@ class DawnPokemon(pygame.sprite.Sprite):
         self.mainGame = mainGame
         self.config = config
         self._layer = self.config.TRAINER_POKEMON_LAYER
-        self.groups = self.mainGame.all_sprite_group, self.mainGame.trainer_pokemon_group
+        self.groups = self.mainGame.trainer_pokemon_group
         pygame.sprite.Sprite.__init__(self,self.groups)
 
         self.x = x*self.config.TILESIZE
