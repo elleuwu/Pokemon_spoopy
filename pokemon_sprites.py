@@ -1,5 +1,5 @@
 from asyncio.windows_events import NULL
-import pygame, random, threading
+import pygame, random, threading, csv
 
 class SpriteSheet:
     def __init__(self,spritesheet):
@@ -317,14 +317,14 @@ class Button:
 
     def text_state(self,state):
         if state == 1:
-            self.content = "You encountered a Pokemon!"
+            self.content = f"You encountered a {self.mainGame.encountered_pokemon.name}!"
             self.text = self.font.render(self.content,True,self.fg)
             self.text_rect = self.text.get_rect(center=(self.width/2,self.height/2))
             self.image.blit(self.text,self.text_rect)
 
         elif state == 2:
             self.image.fill(self.bg)
-            self.content = "Go pokemon!"
+            self.content = f"Go {self.mainGame.dawnPokemon.name}!"
             self.text = self.font.render(self.content,True,self.fg)
             self.text_rect = self.text.get_rect(center=(self.width/2,self.height/2))
             self.image.blit(self.text,self.text_rect)
@@ -352,11 +352,6 @@ class Button:
             self.mainGame.dawnPokemon.kill()
             self.mainGame.battle_music = False
             self.mainGame.encounter_anim = False
-
-
-
-
-        
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self,mainGame,config,x,y,rectx,recty):
@@ -403,7 +398,7 @@ class WildGrassEncounters(pygame.sprite.Sprite):
         pass
 
 class Pokemon(pygame.sprite.Sprite):
-    def __init__(self,mainGame,config,x,y,rect):
+    def __init__(self,mainGame,config,x,y,rect,num):
         self.mainGame = mainGame
         self.config = config
         self._layer = self.config.POKEMON_LAYER
@@ -432,6 +427,14 @@ class Pokemon(pygame.sprite.Sprite):
 
         self.animation_frames = 60
         self.current_frame = 0
+
+        self.name_num = num
+        names = open("pokemon-names.csv")
+        reader = csv.reader(names)
+        for lines in reader:
+            if int(lines[1]) == self.name_num:
+                self.name = lines[0]
+        names.close()
 
     def update(self):
         self.idle()
@@ -491,7 +494,7 @@ class DawnThrowPokemon(pygame.sprite.Sprite):
                 self.mainGame.text_state+=1
 
 class DawnPokemon(pygame.sprite.Sprite):
-    def __init__(self,mainGame,config,x,y,rect):
+    def __init__(self,mainGame,config,x,y,rect,num):
         self.mainGame = mainGame
         self.config = config
         self._layer = self.config.TRAINER_POKEMON_LAYER
@@ -511,6 +514,14 @@ class DawnPokemon(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.y = self.y
+
+        self.name_num = num
+        names = open("pokemon-names.csv")
+        reader = csv.reader(names)
+        for lines in reader:
+            if int(lines[1]) == self.name_num:
+                self.name = lines[0]
+        names.close()
 
     def update(self):
         pass

@@ -1,6 +1,6 @@
 from asyncio.windows_events import NULL
 from logging import exception
-import pygame,sys,random,time,threading,cv2,numpy as np, os
+import pygame,sys,random,time,threading,cv2,numpy as np, os,csv
 
 from pokemon_config import *
 from pokemon_sprites import *
@@ -29,6 +29,8 @@ class mainGame:
         self.intro_background = pygame.image.load("pokemon start screen.jpg")
         self.text_box = pygame.image.load("sprites//text_box.png")
         self.battle_background = pygame.image.load("Battle Background.png")
+
+        self.pokemon_names = open("pokemon-names.csv","r")
 
         self.all_sprite_group = pygame.sprite.LayeredUpdates()
         self.player_sprite_group = pygame.sprite.LayeredUpdates()
@@ -84,6 +86,7 @@ class mainGame:
         self.mainText = NULL
         self.intro_anim = False
         self.encounter_anim = False
+        self.overworld_music_playing = False
 
         self.battle_music_list = ["Music\\Necrozma battle song.wav","Music\\Vs blue battle song.wav","Music\\Vs cyrus battle song.wav","Music\\Zekrom reshiram battle song.wav"]
 
@@ -108,6 +111,7 @@ class mainGame:
         self.start_screen()
         self.music = pygame.mixer.music.load("Music//Viridian city theme.wav")
         pygame.mixer.music.play(loops=-1)
+        self.overworld_music_playing = True
         while True:
             if self.talk_trainer == True:
                 self.text_screen()
@@ -115,6 +119,12 @@ class mainGame:
                 self.updates()
 
             elif self.canEncounter == True:
+                if self.overworld_music_playing:
+                    pass
+                else:
+                    self.music = pygame.mixer.music.load("Music//Viridian city theme.wav")
+                    pygame.mixer.music.play(loops=-1) 
+                    self.overworld_music_playing = True
                 if not self.in_battle:
                     self.encounter_events()
                     self.updates()
@@ -181,16 +191,17 @@ class mainGame:
 
         if self.encountered == True:
             self.wild_pokemon = self.random_pokemon()
-            self.encountered_pokemon = Pokemon(self,self.config,24,7,self.wild_pokemon)
+            self.encountered_pokemon = Pokemon(self,self.config,24,7,self.wild_pokemon,self.random_pokemon_num)
             self.draw_encounter()
             self.in_battle = True
             self.turn = 0
             self.encounter_anim = True
+
             self.mainText = Button(self,15,581,750,150,(0,0,0),(230,230,230),"","pokemon_pixel_font.ttf",70,False,2)
             self.mainTextOutline = Button(self,10,576,760,160,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
 
             self.dawn = DawnThrowPokemon(self,self.config,0,13)
-            self.dawnPokemon = DawnPokemon(self,self.config,2,8,(1280,1360,80,80))
+            self.dawnPokemon = DawnPokemon(self,self.config,2,8,(1280,1360,80,80),493)
 
             self.fight = Button(self,800,576,200,70,(0,0,0),(230,230,230),"Fight","pokemon_pixel_font.ttf",70,False,2)
             self.fightOutline = Button(self,795,571,210,80,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
@@ -208,9 +219,9 @@ class mainGame:
             self.draw()
 
     def random_pokemon(self):
-        random_pokemon_num = random.randint(0,493)
-        pkmn_y = ((random_pokemon_num*80)//2240)
-        pkmn_x = (random_pokemon_num-(28*(pkmn_y)))
+        self.random_pokemon_num = random.randint(0,493)
+        pkmn_y = ((self.random_pokemon_num*80)//2240)
+        pkmn_x = (self.random_pokemon_num-(28*(pkmn_y)))
         rect = pygame.Rect((pkmn_x*80)-80,pkmn_y*80,80,80)
         return rect
         
@@ -254,13 +265,13 @@ class mainGame:
                         self.music = pygame.mixer.music.load(self.battle_music_list[song])
                         pygame.mixer.music.play(loops=-1)
                         self.battle_music = True
+                        self.overworld_music_playing = False
 
                     self.clock.tick(self.fps)
                     if frame_counter != int(self.grass_encounter_video.get(cv2.CAP_PROP_FRAME_COUNT)):
                         self.grass_success, self.grass_encounter_frame = self.grass_encounter_video.read()
                         self.grass_encounter_frame = cv2.resize(self.grass_encounter_frame,(1248,736))
                         surface = pygame.image.frombuffer(self.grass_encounter_frame.tobytes(), self.grass_shape, "BGR")
-                        print(surface.get_at((600,460)))
                         surface.set_colorkey((15,250,5,255))
                         self.screen.blit(surface,(0, 0))
                         pygame.display.update()
