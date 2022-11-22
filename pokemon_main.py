@@ -110,8 +110,9 @@ class mainGame:
 
     def run_game(self):
         self.start_screen()
-        self.music = pygame.mixer.music.load("Music//Viridian city theme.wav")
-        pygame.mixer.music.play(loops=-1)
+        if pygame.mixer.get_init():
+            self.music = pygame.mixer.music.load("Music//Viridian city theme.wav")
+            pygame.mixer.music.play(loops=-1)
         self.overworld_music_playing = True
         while True:
             if self.talk_trainer == True:
@@ -123,8 +124,9 @@ class mainGame:
                 if self.overworld_music_playing:
                     pass
                 else:
-                    self.music = pygame.mixer.music.load("Music//Viridian city theme.wav")
-                    pygame.mixer.music.play(loops=-1) 
+                    if pygame.mixer.get_init():
+                        self.music = pygame.mixer.music.load("Music//Viridian city theme.wav")
+                        pygame.mixer.music.play(loops=-1) 
                     self.overworld_music_playing = True
                 if not self.in_battle:
                     self.encounter_events()
@@ -279,8 +281,9 @@ class mainGame:
                     else:
                         self.draw()
                         song = random.randint(0,3)
-                        self.music = pygame.mixer.music.load(self.battle_music_list[song])
-                        pygame.mixer.music.play(loops=-1)
+                        if pygame.mixer.get_init():
+                            self.music = pygame.mixer.music.load(self.battle_music_list[song])
+                            pygame.mixer.music.play(loops=-1)
                         self.battle_music = True
                         self.overworld_music_playing = False
 
@@ -342,9 +345,9 @@ class mainGame:
    
     def start_screen(self):
         intro = True
-
-        self.music = pygame.mixer.music.load("Music//Gold theme song.wav")
-        pygame.mixer.music.play(loops=-1)
+        if pygame.mixer.get_init():
+            self.music = pygame.mixer.music.load("Music//Gold theme song.wav")
+            pygame.mixer.music.play(loops=-1)
 
         title = self.fontS.render('Pokemon Demo Test',True,(255,203,5))
         title_rect = title.get_rect(x=395,y=35)

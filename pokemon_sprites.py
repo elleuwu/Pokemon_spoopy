@@ -414,9 +414,9 @@ class pokemon_prop():
         reader = csv.reader(names)
         for lines in reader:
             if int(lines[1]) == self.pokemon_num:
-                self.name = lines[1]
-                self.type = lines[2]
-                self.base_stats = lines[3]
+                self.name = lines[0]
+                #self.type = lines[2]
+                #self.base_stats = lines[3]
         names.close()
 
 class Pokemon(pygame.sprite.Sprite):
