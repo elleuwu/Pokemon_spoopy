@@ -1,6 +1,8 @@
 from asyncio.windows_events import NULL
+from difflib import Match
 from distutils.command.config import config
 import pygame, random, threading, csv,time
+
 
 class SpriteSheet:
     def __init__(self,spritesheet):
@@ -267,7 +269,7 @@ class Ground(pygame.sprite.Sprite):
         self.rect.y = self.y
 
 class Button:
-    def __init__(self,mainGame,x,y,width,height,fg,bg,content,font,fontsize,colorkey,scale,image_to_load = False):
+    def __init__(self,mainGame,x,y,width,height,fg,bg,content,font,fontsize,colorkey,scale,image_to_load = False,disable = False):
 
         self.mainGame = mainGame
 
@@ -282,6 +284,7 @@ class Button:
 
         self.fg = fg
         self.bg = bg
+        self.disable = disable
 
         if image_to_load:
             img = pygame.transform.scale(image_to_load,(int(width*scale),int(height*scale)))
@@ -298,13 +301,13 @@ class Button:
             if colorkey == True:
                 self.image.set_colorkey(self.bg)
 
-        self.rect = self.image.get_rect()
-        self.rect.x = self.x
-        self.rect.y = self.y
+            self.rect = self.image.get_rect()
+            self.rect.x = self.x
+            self.rect.y = self.y
 
-        self.text = self.font.render(self.content,True,self.fg)
-        self.text_rect = self.text.get_rect(center=(self.width/2,self.height/2))
-        self.image.blit(self.text,self.text_rect)
+            self.text = self.font.render(self.content,True,self.fg)
+            self.text_rect = self.text.get_rect(center=(self.width/2,self.height/2))
+            self.image.blit(self.text,self.text_rect)
 
     def is_pressed(self,pos):
         if self.rect.collidepoint(pos):
@@ -339,6 +342,7 @@ class Button:
             self.mainGame.intro_anim = False
 
         elif state == 5:
+            self.mainGame.hide_button = False
             self.image.fill(self.bg)
             self.content = f"What will {self.mainGame.dawnPokemon.name} do?"
             self.text = self.font.render(self.content,True,self.fg)
@@ -359,6 +363,7 @@ class Button:
             self.mainGame.dawnPokemon.kill()
             self.mainGame.battle_music = False
             self.mainGame.encounter_anim = False
+
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self,mainGame,config,x,y,rectx,recty):
@@ -410,16 +415,173 @@ class pokemon_prop():
         self.config = config
         self.pokemon_to_load = pokemon_num
 
-        names = open("pokemon-names.csv")
+        names = open("pokemon-properties.csv")
         reader = csv.reader(names)
         for lines in reader:
-            if int(lines[1]) == self.pokemon_num:
-                self.name = lines[0]
-                #self.type = lines[2]
-                #self.base_stats = lines[3]
+            if int(lines[0]) == self.pokemon_num:
+                self.name = lines[1]
+                self.type1 = lines[2]
+                self.type2 = lines[3]
+                self.hp_base = int(lines[5])
+                self.atk_base = int(lines[6])
+                self.def_base = int(lines[7])
+                self.spA_base = int(lines[8])
+                self.spD_base = int(lines[9])
+                self.speed_base = int(lines[10])
+                self.isLegendary = lines[12]
+                print(self.name,self.type1,self.type2,self.hp_base,self.atk_base,self.def_base,self.spA_base,self.spD_base,self.speed_base,self.isLegendary)
         names.close()
+        self.base = [self.hp_base,self.atk_base,self.def_base,self.spA_base,self.spD_base,self.speed_base]
 
-class Pokemon(pygame.sprite.Sprite):
+        self.hp_iv = random.randint(0,31)
+        self.atk_iv = random.randint(0,31)
+        self.def_iv = random.randint(0,31)
+        self.spA_iv = random.randint(0,31)
+        self.spD_iv = random.randint(0,31)
+        self.speed_iv = random.randint(0,31)
+        self.ivs = [self.hp_iv,self.atk_iv,self.def_iv,self.spA_iv,self.spD_iv,self.speed_iv]
+
+        self.hp_ev = 0
+        self.atk_ev = 0
+        self.def_ev = 0
+        self.spA_ev = 0
+        self.spD_ev = 0
+        self.speed_ev = 0
+        self.evs = [self.hp_ev,self.atk_ev,self.def_ev,self.spA_ev,self.spD_ev,self.speed_ev]
+
+        self.level = 50
+        self.nature = self.mainGame.pkmn_natures(random.randint(1,25))
+
+        self.hp = (((2*self.hp_base+self.hp_iv+(self.hp_ev//4))*self.level)//100)+self.level+10
+
+        self.atk = (((2*self.atk_base+self.atk_iv+(self.atk_ev//4))*self.level)//100)+5
+        self.defn = (((2*self.def_base+self.def_iv+(self.def_ev//4))*self.level)//100)+5
+        self.spA = (((2*self.spA_base+self.spA_iv+(self.spA_ev//4))*self.level)//100)+5
+        self.spD = (((2*self.spD_base+self.spD_iv+(self.spD_ev//4))*self.level)//100)+5
+        self.speed = (((2*self.speed_base+self.speed_iv+(self.speed_ev//4))*self.level)//100)+5
+
+        match self.nature:
+            case self.mainGame.pkmn_natures.Hardy:
+                print(self.nature)
+
+            case self.mainGame.pkmn_natures.Lonely:
+                print(self.nature)
+                self.atk+=(self.atk//100)*10
+                self.defn-=(self.defn//100)*10
+
+            case self.mainGame.pkmn_natures.Brave:
+                print(self.nature)
+                self.atk+=(self.atk//100)*10
+                self.speed-=(self.speed//100)*10
+
+            case self.mainGame.pkmn_natures.Adamant:
+                print(self.nature)
+                self.atk+=(self.atk//100)*10
+                self.spA-=(self.spA//100)*10
+
+            case self.mainGame.pkmn_natures.Naughty:
+                print(self.nature)
+                self.atk+=(self.atk//100)*10
+                self.spD-=(self.spD//100)*10
+
+            case self.mainGame.pkmn_natures.Bold:
+                print(self.nature)
+                self.atk-=(self.atk//100)*10
+                self.defn+=(self.defn//100)*10
+
+            case self.mainGame.pkmn_natures.Docile:
+                print(self.nature)
+
+            case self.mainGame.pkmn_natures.Relaxed:
+                print(self.nature)
+                self.speed-=(self.speed//100)*10
+                self.defn+=(self.defn//100)*10
+
+            case self.mainGame.pkmn_natures.Impish:
+                print(self.nature)
+                self.spA-=(self.atk//100)*10
+                self.defn+=(self.defn//100)*10
+
+            case self.mainGame.pkmn_natures.Lax:
+                print(self.nature)
+                self.spD-=(self.atk//100)*10
+                self.defn+=(self.defn//100)*10
+
+            case self.mainGame.pkmn_natures.Timid:
+                print(self.nature)
+                self.atk-=(self.atk//100)*10
+                self.speed+=(self.speed//100)*10
+
+            case self.mainGame.pkmn_natures.Hasty:
+                print(self.nature)
+                self.defn-=(self.defn//100)*10
+                self.speed+=(self.speed//100)*10
+
+            case self.mainGame.pkmn_natures.Serious:
+                print(self.nature)
+
+            case self.mainGame.pkmn_natures.Jolly:
+                print(self.nature)
+                self.spA-=(self.spA//100)*10
+                self.speed+=(self.speed//100)*10
+
+            case self.mainGame.pkmn_natures.Naive:
+                print(self.nature)
+                self.spD-=(self.spD//100)*10
+                self.speed+=(self.speed//100)*10
+
+            case self.mainGame.pkmn_natures.Modest:
+                print(self.nature)
+                self.spA+=(self.spA//100)*10
+                self.atk-=(self.atk//100)*10
+
+            case self.mainGame.pkmn_natures.Mild:
+                print(self.nature)
+                self.spA+=(self.spA//100)*10
+                self.defn-=(self.defn//100)*10
+
+            case self.mainGame.pkmn_natures.Quiet:
+                print(self.nature)
+                self.spA+=(self.spA//100)*10
+                self.speed-=(self.speed//100)*10
+
+            case self.mainGame.pkmn_natures.Bashful:
+                print(self.nature)
+
+            case self.mainGame.pkmn_natures.Rash:
+                print(self.nature)
+                self.spA+=(self.spA//100)*10
+                self.spD-=(self.spD//100)*10
+
+            case self.mainGame.pkmn_natures.Calm:
+                print(self.nature)
+                self.spD+=(self.spA//100)*10
+                self.atk-=(self.atk//100)*10
+
+            case self.mainGame.pkmn_natures.Gentle:
+                print(self.nature)
+                self.spD+=(self.spA//100)*10
+                self.defn-=(self.defn//100)*10
+
+            case self.mainGame.pkmn_natures.Sassy:
+                print(self.nature)
+                self.spD+=(self.spA//100)*10
+                self.speed-=(self.speed//100)*10
+
+            case self.mainGame.pkmn_natures.Careful:
+                print(self.nature)
+                self.spA-=(self.spA//100)*10
+                self.spD+=(self.spD//100)*10
+
+            case self.mainGame.pkmn_natures.Quirky:
+                print(self.nature)
+
+        self.stats = [self.hp,self.atk,self.defn,self.spA,self.spD,self.speed]
+        print(self.base,self.ivs,self.evs,self.stats)
+
+
+
+class Pokemon(pygame.sprite.Sprite,pokemon_prop):
     def __init__(self,mainGame,config,x,y,rect,num):
         self.mainGame = mainGame
         self.config = config
@@ -450,13 +612,9 @@ class Pokemon(pygame.sprite.Sprite):
         self.animation_frames = 60
         self.current_frame = 0
 
-        self.name_num = num
-        names = open("pokemon-names.csv")
-        reader = csv.reader(names)
-        for lines in reader:
-            if int(lines[1]) == self.name_num:
-                self.name = lines[0]
-        names.close()
+        self.pokemon_num = num
+        pokemon_prop.__init__(self,self.mainGame,self.config,self.pokemon_num)
+
 
     def update(self):
         self.idle()
@@ -544,13 +702,14 @@ class DawnPokemon(pygame.sprite.Sprite,pokemon_prop):
         pass
 
 class hp_bars():
-    def __init__(self,mainGame,config,name,rect,font):
+    def __init__(self,mainGame,config,pokemon,rect,font):
         self.mainGame = mainGame
         self.config = config
-        self.name = name
-        self.max_hp = 200
-        self.current_hp = 150
-        self.lvl = 100
+        self.pokemon = pokemon
+        self.name = self.pokemon.name
+        self.max_hp = self.pokemon.hp
+        self.current_hp = self.pokemon.hp//2
+        self.lvl = self.pokemon.level
         self.rect = pygame.Rect(rect)
         self.nameFont = pygame.font.Font(font,60)
         self.lvlFont = pygame.font.Font(font,60)
@@ -573,7 +732,7 @@ class hp_bars():
         self.pkmn_name = self.nameFont.render(f"{self.name}",True,(0,0,0))
         self.name_rect = self.pkmn_name.get_rect(x=10,y=10)
 
-        self.pkmn_lvl = self.lvlFont.render(f"Lvl {self.lvl}",True,(0,0,0))
+        self.pkmn_lvl = self.lvlFont.render(f"Lvl  {self.lvl}",True,(0,0,0))
         self.lvl_rect = self.pkmn_lvl.get_rect(x=250,y=10)
 
         self.pkmn_hp = self.nameFont.render(f"HP",True,(0,0,0))

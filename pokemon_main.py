@@ -1,7 +1,7 @@
 from asyncio.windows_events import NULL
 from logging import exception
 import pygame,sys,random,time,threading,cv2,numpy as np, os,csv
-
+from enum import Enum
 from pokemon_config import *
 from pokemon_sprites import *
 
@@ -30,7 +30,7 @@ class mainGame:
         self.text_box = pygame.image.load("sprites//text_box.png")
         self.battle_background = pygame.image.load("Battle Background.png")
 
-        self.pokemon_names = open("pokemon-names.csv","r")
+        self.pokemon_names = open("pokemon-properties.csv","r")
 
         self.all_sprite_group = pygame.sprite.LayeredUpdates()
         self.player_sprite_group = pygame.sprite.LayeredUpdates()
@@ -44,7 +44,7 @@ class mainGame:
         self.trainer_pokemon_group = pygame.sprite.LayeredUpdates()
 
         os.environ['SDL_VIDEO_CENTERED'] = '1'
-        self.screen = pygame.display.set_mode((self.config.screen_width,self.config.screen_height),pygame.NOFRAME)
+        self.screen = pygame.display.set_mode((self.config.screen_width,self.config.screen_height))
         pygame.display.set_caption("Pokemon Remake Early Alpha Test 01")
         self.screen_rect = self.screen.get_rect()
 
@@ -83,6 +83,7 @@ class mainGame:
         self.in_battle = False
         self.turn = 500
         self.text_state = 0
+        self.sub_state = 0
         self.mainText = NULL
         self.hide_button = False
         self.intro_anim = False
@@ -91,6 +92,10 @@ class mainGame:
 
         self.battle_music_list = ["Music\\Necrozma battle song.wav","Music\\Vs blue battle song.wav","Music\\Vs cyrus battle song.wav","Music\\Zekrom reshiram battle song.wav"]
 
+        self.pkmn_natures = Enum("Natures",[("Hardy",1),("Lonely",2),("Brave",3),("Adamant",4),("Naughty",5),("Bold",6),("Docile",7),("Relaxed",8),
+                                            ("Impish",9),("Lax",10),("Timid",11),("Hasty",12),("Serious",13),("Jolly",14),("Naive",15),("Modest",16),
+                                            ("Mild",17),("Quiet",18),("Bashful",19),("Rash",20),("Calm",21),("Gentle",22),("Sassy",23),("Careful",24),
+                                            ("Quirky",25)])
 
     def createMap(self):
         self.trainer_pos = []
@@ -110,7 +115,6 @@ class mainGame:
 
     def run_game(self):
         self.start_screen()
-        print("sgds")
         if pygame.mixer.get_init():
             self.music = pygame.mixer.music.load("Music//Viridian city theme.wav")
             pygame.mixer.music.play(loops=-1)
@@ -179,6 +183,24 @@ class mainGame:
                         if self.run.is_pressed(event.pos):
                             self.text_state = 9
 
+                        if self.text_state == 6:
+                            if self.move_back.is_pressed(event.pos):
+                                if self.move_back.disable:
+                                    time.sleep(0.01)
+                                    self.move_back.disable = False
+                                else:
+                                    self.text_state = 5
+                                    self.move_back.disable = True
+
+                            if self.move1.is_pressed(event.pos):
+                                self.text_state = 10
+                            if self.move2.is_pressed(event.pos):
+                                self.text_state = 11
+                            if self.move3.is_pressed(event.pos):
+                                self.text_state = 12
+                            if self.move4.is_pressed(event.pos):
+                                self.text_state = 13
+
         if self.canEncounter == True:
             if not self.enc_timer_started:
                 print("thread started")
@@ -186,11 +208,8 @@ class mainGame:
                 self.enc_timer.start()
 
 
-
-
-
     def wild_battle(self):
-        if self.random_encounter_chance <= 0.5 and self.random_encounter_chance>0:
+        if self.random_encounter_chance <= 0.9 and self.random_encounter_chance>0:
             self.encountered = True
 
         if self.encountered == True:
@@ -219,21 +238,24 @@ class mainGame:
             self.run = Button(self,1015,661,200,70,(0,0,0),(240,240,240),"Run","pokemon_pixel_font.ttf",70,False,2)
             self.runOutline = Button(self,1010,656,210,80,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
 
-            self.move1 = Button(self,15,581,365,65,(0,0,0),(240,240,240),"Move 1","pokemon_pixel_font.ttf",70,False,2)
-            self.move1_outline = Button(self,10,576,375,75,(0,0,0),(0,0,0),"Move 1","pokemon_pixel_font.ttf",70,False,2)
+            self.move1 = Button(self,15,581,365,65,(0,0,0),(255, 51, 63),"Flamethrower","pokemon_pixel_font.ttf",70,False,2)
+            self.move1_outline = Button(self,10,576,375,75,(0,0,0),(255, 0, 15),"","pokemon_pixel_font.ttf",70,False,2)
 
-            self.move2 = Button(self,395,581,365,65,(0,0,0),(240,240,240),"Move 2","pokemon_pixel_font.ttf",70,False,2)
-            self.move2_outline = Button(self,390,576,375,75,(0,0,0),(0,0,0),"Move 2","pokemon_pixel_font.ttf",70,False,2)
+            self.move2 = Button(self,395,581,365,65,(0,0,0),(13, 181, 254),"Hydro pump","pokemon_pixel_font.ttf",70,False,2)
+            self.move2_outline = Button(self,390,576,375,75,(0,0,0),(1, 150, 215),"","pokemon_pixel_font.ttf",70,False,2)
 
-            self.move3 = Button(self,15,661,365,65,(0,0,0),(240,240,240),"Move 3","pokemon_pixel_font.ttf",70,False,2)
-            self.move3_outline = Button(self,10,656,375,75,(0,0,0),(0,0,0),"Move 3","pokemon_pixel_font.ttf",70,False,2)
+            self.move3 = Button(self,15,661,365,65,(0,0,0),(233, 241, 16),"Thunderbolt","pokemon_pixel_font.ttf",70,False,2)
+            self.move3_outline = Button(self,10,656,375,75,(0,0,0),(188, 195, 11),"","pokemon_pixel_font.ttf",70,False,2)
 
-            self.move4 = Button(self,395,661,365,65,(0,0,0),(240,240,240),"Move 4","pokemon_pixel_font.ttf",70,False,2)
-            self.move4_outline = Button(self,390,656,375,75,(0,0,0),(0,0,0),"Move 4","pokemon_pixel_font.ttf",70,False,2)
+            self.move4 = Button(self,395,661,365,65,(0,0,0),(240,240,240),"Hyper fang","pokemon_pixel_font.ttf",70,False,2)
+            self.move4_outline = Button(self,390,656,375,75,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
 
-            self.enemy_hp_bar = hp_bars(self,self.config,self.encountered_pokemon.name,(0,0,400,150),"pokemon_pixel_font.ttf")
+            self.move_back = Button(self,800,550,410,175,(0,0,0),(240,240,240),"Back","pokemon_pixel_font.ttf",70,False,2,disable=True)
+            self.move_back_outline = Button(self,795,545,420,185,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2,disable=True)
 
-            self.dawn1_hp_bar = hp_bars(self,self.config,self.dawnPokemon.name,(0,0,400,150),"pokemon_pixel_font.ttf")
+            self.enemy_hp_bar = hp_bars(self,self.config,self.encountered_pokemon,(0,0,400,150),"pokemon_pixel_font.ttf")
+
+            self.dawn1_hp_bar = hp_bars(self,self.config,self.dawnPokemon,(0,0,400,150),"pokemon_pixel_font.ttf")
 
         else:
             self.draw()
@@ -321,6 +343,7 @@ class mainGame:
                 self.screen.blit(self.run.image,self.run.rect)
 
             if self.text_state == 6:
+
                 self.screen.blit(self.move1_outline.image,self.move1_outline.rect)
                 self.screen.blit(self.move1.image,self.move1.rect)
                 self.screen.blit(self.move2_outline.image,self.move2_outline.rect)
@@ -329,6 +352,9 @@ class mainGame:
                 self.screen.blit(self.move3.image,self.move3.rect)
                 self.screen.blit(self.move4_outline.image,self.move4_outline.rect)
                 self.screen.blit(self.move4.image,self.move4.rect)
+
+                self.screen.blit(self.move_back_outline.image,self.move_back_outline.rect)
+                self.screen.blit(self.move_back.image,self.move_back.rect)
             
             if self.hide_button == False:
                 self.screen.blit(self.mainTextOutline.image,(self.mainTextOutline.rect))
@@ -433,6 +459,9 @@ class mainGame:
                 self.random_encounter_chance = 1.1
 
             time.sleep(random.uniform(1.5, 2.5))
+
+    #def calc_damage(self,pokemon1,pokemon2,move_used):
+
 
 
 
