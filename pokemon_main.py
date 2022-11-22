@@ -110,6 +110,7 @@ class mainGame:
 
     def run_game(self):
         self.start_screen()
+        print("sgds")
         if pygame.mixer.get_init():
             self.music = pygame.mixer.music.load("Music//Viridian city theme.wav")
             pygame.mixer.music.play(loops=-1)
