@@ -1,5 +1,6 @@
 from asyncio.windows_events import NULL
-import pygame, random, threading, csv
+from distutils.command.config import config
+import pygame, random, threading, csv,time
 
 class SpriteSheet:
     def __init__(self,spritesheet):
@@ -330,17 +331,23 @@ class Button:
             self.image.blit(self.text,self.text_rect)
 
         elif state == 3:
+            self.mainGame.hide_button = True
             self.mainGame.intro_anim = True
 
         elif state == 4:
+            self.mainGame.hide_button = False
             self.mainGame.intro_anim = False
 
         elif state == 5:
             self.image.fill(self.bg)
-            self.content = "What will your Pokemon do?"
+            self.content = f"What will {self.mainGame.dawnPokemon.name} do?"
             self.text = self.font.render(self.content,True,self.fg)
             self.text_rect = self.text.get_rect(center=(self.width/2,self.height/2))
             self.image.blit(self.text,self.text_rect)
+
+        elif state == 6:
+            self.mainGame.hide_button = True
+            self.mainGame.dawn.kill()
 
         elif state == 9:
             self.mainGame.encountered = False
@@ -396,6 +403,21 @@ class WildGrassEncounters(pygame.sprite.Sprite):
 
     def update(self):
         pass
+
+class pokemon_prop():
+    def __init__(self,mainGame,config,pokemon_num):
+        self.mainGame = mainGame
+        self.config = config
+        self.pokemon_to_load = pokemon_num
+
+        names = open("pokemon-names.csv")
+        reader = csv.reader(names)
+        for lines in reader:
+            if int(lines[1]) == self.pokemon_num:
+                self.name = lines[1]
+                self.type = lines[2]
+                self.base_stats = lines[3]
+        names.close()
 
 class Pokemon(pygame.sprite.Sprite):
     def __init__(self,mainGame,config,x,y,rect,num):
@@ -469,7 +491,7 @@ class DawnThrowPokemon(pygame.sprite.Sprite):
         self.anim_list = [self.image1,self.image2,self.image3,self.image4,self.image5]
 
         self.index = 0
-        self.animation_frames = 15
+        self.animation_frames = 10
         self.current_frame = 0
 
         self.image = self.imageN
@@ -489,11 +511,11 @@ class DawnThrowPokemon(pygame.sprite.Sprite):
             self.image = pygame.transform.scale(self.anim_list[self.index],self.image_vector * 4)
 
         if self.index == 4:
-            if self.current_frame == 14:
-                self.mainGame.intro_anim == False
+            if self.current_frame == 9:
+                self.mainGame.hide_button == False
                 self.mainGame.text_state+=1
 
-class DawnPokemon(pygame.sprite.Sprite):
+class DawnPokemon(pygame.sprite.Sprite,pokemon_prop):
     def __init__(self,mainGame,config,x,y,rect,num):
         self.mainGame = mainGame
         self.config = config
@@ -515,16 +537,56 @@ class DawnPokemon(pygame.sprite.Sprite):
         self.rect.x = self.x
         self.rect.y = self.y
 
-        self.name_num = num
-        names = open("pokemon-names.csv")
-        reader = csv.reader(names)
-        for lines in reader:
-            if int(lines[1]) == self.name_num:
-                self.name = lines[0]
-        names.close()
+        self.pokemon_num = num
+        pokemon_prop.__init__(self,self.mainGame,self.config,self.pokemon_num)
 
     def update(self):
         pass
+
+class hp_bars():
+    def __init__(self,mainGame,config,name,rect,font):
+        self.mainGame = mainGame
+        self.config = config
+        self.name = name
+        self.max_hp = 200
+        self.current_hp = 150
+        self.lvl = 100
+        self.rect = pygame.Rect(rect)
+        self.nameFont = pygame.font.Font(font,60)
+        self.lvlFont = pygame.font.Font(font,60)
+        self.hp_percentage = (self.current_hp/self.max_hp)
+
+        self.background = pygame.Surface((self.rect.width-10,self.rect.height-10))
+        self.background.fill((240,240,240))
+
+        self.background_outline = pygame.Surface((self.rect.width,self.rect.height))
+        self.background_outline.fill((0,0,0))
+
+        self.bar = pygame.Surface((300,40))
+        self.bar.fill((0,0,0))
+        self.bar_rect = self.bar.get_rect(x=75,y=75)
+
+        self.hp_fill = pygame.Surface(((300*self.hp_percentage)-10,30))
+        self.hp_fill.fill((0,230,0))
+        self.hp_fill_rect = self.hp_fill.get_rect(x=5,y=5)
+
+        self.pkmn_name = self.nameFont.render(f"{self.name}",True,(0,0,0))
+        self.name_rect = self.pkmn_name.get_rect(x=10,y=10)
+
+        self.pkmn_lvl = self.lvlFont.render(f"Lvl {self.lvl}",True,(0,0,0))
+        self.lvl_rect = self.pkmn_lvl.get_rect(x=250,y=10)
+
+        self.pkmn_hp = self.nameFont.render(f"HP",True,(0,0,0))
+        self.hp_rect = self.pkmn_hp.get_rect(x=25,y=70)
+
+        self.bar.blit(self.hp_fill,self.hp_fill_rect)
+        self.background.blit(self.bar,self.bar_rect)
+        self.background.blit(self.pkmn_hp,self.hp_rect)
+        self.background.blit(self.pkmn_name,self.name_rect)
+        self.background.blit(self.pkmn_lvl,self.lvl_rect)
+        self.background_outline.blit(self.background,(self.rect.x+5,self.rect.y+5,self.rect.width,self.rect.height))
+
+
 
 
 

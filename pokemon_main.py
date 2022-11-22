@@ -84,6 +84,7 @@ class mainGame:
         self.turn = 500
         self.text_state = 0
         self.mainText = NULL
+        self.hide_button = False
         self.intro_anim = False
         self.encounter_anim = False
         self.overworld_music_playing = False
@@ -203,17 +204,33 @@ class mainGame:
             self.dawn = DawnThrowPokemon(self,self.config,0,13)
             self.dawnPokemon = DawnPokemon(self,self.config,2,8,(1280,1360,80,80),493)
 
-            self.fight = Button(self,800,576,200,70,(0,0,0),(230,230,230),"Fight","pokemon_pixel_font.ttf",70,False,2)
+            self.fight = Button(self,800,576,200,70,(0,0,0),(240,240,240),"Fight","pokemon_pixel_font.ttf",70,False,2)
             self.fightOutline = Button(self,795,571,210,80,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
 
-            self.bag = Button(self,1015,576,200,70,(0,0,0),(230,230,230),"Bag","pokemon_pixel_font.ttf",70,False,2)
+            self.bag = Button(self,1015,576,200,70,(0,0,0),(240,240,240),"Bag","pokemon_pixel_font.ttf",70,False,2)
             self.bagOutline = Button(self,1010,571,210,80,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
 
-            self.Pokemon = Button(self,800,661,200,70,(0,0,0),(230,230,230),"Pokemon","pokemon_pixel_font.ttf",70,False,2)
+            self.Pokemon = Button(self,800,661,200,70,(0,0,0),(240,240,240),"Pokemon","pokemon_pixel_font.ttf",70,False,2)
             self.PokemonOutline = Button(self,795,656,210,80,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
 
-            self.run = Button(self,1015,661,200,70,(0,0,0),(230,230,230),"Run","pokemon_pixel_font.ttf",70,False,2)
+            self.run = Button(self,1015,661,200,70,(0,0,0),(240,240,240),"Run","pokemon_pixel_font.ttf",70,False,2)
             self.runOutline = Button(self,1010,656,210,80,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
+
+            self.move1 = Button(self,15,581,365,65,(0,0,0),(240,240,240),"Move 1","pokemon_pixel_font.ttf",70,False,2)
+            self.move1_outline = Button(self,10,576,375,75,(0,0,0),(0,0,0),"Move 1","pokemon_pixel_font.ttf",70,False,2)
+
+            self.move2 = Button(self,395,581,365,65,(0,0,0),(240,240,240),"Move 2","pokemon_pixel_font.ttf",70,False,2)
+            self.move2_outline = Button(self,390,576,375,75,(0,0,0),(0,0,0),"Move 2","pokemon_pixel_font.ttf",70,False,2)
+
+            self.move3 = Button(self,15,661,365,65,(0,0,0),(240,240,240),"Move 3","pokemon_pixel_font.ttf",70,False,2)
+            self.move3_outline = Button(self,10,656,375,75,(0,0,0),(0,0,0),"Move 3","pokemon_pixel_font.ttf",70,False,2)
+
+            self.move4 = Button(self,395,661,365,65,(0,0,0),(240,240,240),"Move 4","pokemon_pixel_font.ttf",70,False,2)
+            self.move4_outline = Button(self,390,656,375,75,(0,0,0),(0,0,0),"Move 4","pokemon_pixel_font.ttf",70,False,2)
+
+            self.enemy_hp_bar = hp_bars(self,self.config,self.encountered_pokemon.name,(0,0,400,150),"pokemon_pixel_font.ttf")
+
+            self.dawn1_hp_bar = hp_bars(self,self.config,self.dawnPokemon.name,(0,0,400,150),"pokemon_pixel_font.ttf")
 
         else:
             self.draw()
@@ -287,6 +304,8 @@ class mainGame:
 
             if self.text_state >= 4:
                 self.trainer_pokemon_group.draw(self.screen)
+                self.screen.blit(self.dawn1_hp_bar.background_outline,(100,100))
+
             if self.text_state == 5:
                 self.screen.blit(self.fightOutline.image,self.fightOutline.rect)
                 self.screen.blit(self.fight.image,self.fight.rect)
@@ -296,24 +315,31 @@ class mainGame:
                 self.screen.blit(self.Pokemon.image,self.Pokemon.rect)
                 self.screen.blit(self.runOutline.image,self.runOutline.rect)
                 self.screen.blit(self.run.image,self.run.rect)
+
+            if self.text_state == 6:
+                self.screen.blit(self.move1_outline.image,self.move1_outline.rect)
+                self.screen.blit(self.move1.image,self.move1.rect)
+                self.screen.blit(self.move2_outline.image,self.move2_outline.rect)
+                self.screen.blit(self.move2.image,self.move2.rect)
+                self.screen.blit(self.move3_outline.image,self.move3_outline.rect)
+                self.screen.blit(self.move3.image,self.move3.rect)
+                self.screen.blit(self.move4_outline.image,self.move4_outline.rect)
+                self.screen.blit(self.move4.image,self.move4.rect)
             
-            if self.intro_anim == False:
+            if self.hide_button == False:
                 self.screen.blit(self.mainTextOutline.image,(self.mainTextOutline.rect))
                 self.screen.blit(self.mainText.image,(self.mainText.rect))
 
-            if self.intro_anim == True:
+            if self.hide_button == True:
                 self.trainer_intro_group.draw(self.screen)
 
 
-
             self.clock.tick(self.fps)
+            self.screen.blit(self.enemy_hp_bar.background_outline,(750,25))
             self.battle_sprite_group.draw(self.screen)
 
         pygame.display.update()
    
-
-
-
     def start_screen(self):
         intro = True
 
