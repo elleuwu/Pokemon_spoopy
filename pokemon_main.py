@@ -194,6 +194,7 @@ class mainGame:
 
                             if self.move1.is_pressed(event.pos):
                                 self.text_state = 10
+                                self.calc_damage(1,self.dawnPokemon,self.encountered_pokemon)
                             if self.move2.is_pressed(event.pos):
                                 self.text_state = 11
                             if self.move3.is_pressed(event.pos):
@@ -369,7 +370,35 @@ class mainGame:
             self.battle_sprite_group.draw(self.screen)
 
         pygame.display.update()
-   
+
+    def calc_damage(self,move,pokemon1,pokemon2):
+        move_used = move
+        atk_pokemon = pokemon1
+        def_pokemon = pokemon2
+        level = atk_pokemon.level
+        
+        if move_used == 1:
+            if atk_pokemon.type1 == "Fire":
+                stab = 1.5
+            else:
+                stab = 1
+            if def_pokemon.type1 == "Grass" or def_pokemon.type1 == "Ice" or def_pokemon.type1 == "Bug" or def_pokemon.type1 == "Steel":
+                type1_dmg = 2
+            elif def_pokemon.type1 == "Fire" or def_pokemon.type1 == "Water" or def_pokemon.type1 == "Rock" or def_pokemon.type1 == "Dragon":
+                type1_dmg = 0.5
+            else:
+                type1_dmg = 1
+            if def_pokemon.type2 == "Grass" or def_pokemon.type2 == "Ice" or def_pokemon.type2 == "Bug" or def_pokemon.type2 == "Steel":
+                type2_dmg = 2
+            elif def_pokemon.type2 == "Fire" or def_pokemon.type2 == "Water" or def_pokemon.type2 == "Rock" or def_pokemon.type2 == "Dragon":
+                type2_dmg = 0.5
+            else:
+                type2_dmg = 1
+
+            damage = (((((((2*level)//5)+2)*90*(atk_pokemon.spA//def_pokemon.spD))//50)+2)*random.randint(1,2)*(random.randint(85,100)/100)*stab*type1_dmg*type2_dmg)
+        print(int(damage))
+        return damage
+
     def start_screen(self):
         intro = True
         if pygame.mixer.get_init():
@@ -460,7 +489,6 @@ class mainGame:
 
             time.sleep(random.uniform(1.5, 2.5))
 
-    #def calc_damage(self,pokemon1,pokemon2,move_used):
 
 
 
