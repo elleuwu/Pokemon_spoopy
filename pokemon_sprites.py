@@ -365,7 +365,8 @@ class Button:
             self.mainGame.encounter_anim = False
 
         elif state == 10:
-            pass
+            self.mainGame.hide_button = False
+            self.content = f"{self.mainGame.dawnPokemon.name} used Flamethrower!"
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -719,11 +720,7 @@ class hp_bars():
         self.rect = pygame.Rect(rect)
         self.nameFont = pygame.font.Font(font,60)
         self.lvlFont = pygame.font.Font(font,60)
-        print(self.max_hp,self.current_hp,"HP2")
-        if self.current_hp == 0:
-            self.hp_percentage = self.current_hp+1
-        else:
-            self.hp_percentage = (self.max_hp/self.current_hp)
+        print(self.max_hp,self.current_hp,"maxhp,current hp")
 
         self.background = pygame.Surface((self.rect.width-10,self.rect.height-10))
         self.background.fill((240,240,240))
@@ -735,7 +732,14 @@ class hp_bars():
         self.bar.fill((0,0,0))
         self.bar_rect = self.bar.get_rect(x=75,y=75)
 
-        self.hp_fill = pygame.Surface(((300*self.hp_percentage)-10,30))
+        if self.current_hp <= 0:
+            self.hp_fill = pygame.Surface((0,0))
+            self.mainGame.fainted = True
+        else:
+            self.hp_percentage = (self.current_hp/self.max_hp)
+            print(self.hp_percentage)
+            self.hp_fill = pygame.Surface(((self.bar.get_width()*self.hp_percentage)-10,30))
+
         self.hp_fill.fill((0,230,0))
         self.hp_fill_rect = self.hp_fill.get_rect(x=5,y=5)
 

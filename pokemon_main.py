@@ -170,7 +170,7 @@ class mainGame:
                     sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    if self.text_state < 5:
+                    if self.text_state < 5 or self.text_state == 10:
                         if self.mainText.is_pressed(event.pos):
                             self.text_state+=1
                     else:
@@ -193,13 +193,13 @@ class mainGame:
                                     self.move_back.disable = True
 
                             if self.move1.is_pressed(event.pos):
-                                self.text_state = 10
-                            if self.move2.is_pressed(event.pos):
                                 self.text_state = 11
+                            if self.move2.is_pressed(event.pos):
+                                self.text_state = 0
                             if self.move3.is_pressed(event.pos):
-                                self.text_state = 12
+                                self.text_state = 0
                             if self.move4.is_pressed(event.pos):
-                                self.text_state = 13
+                                self.text_state = 0
 
         if self.canEncounter == True:
             if not self.enc_timer_started:
@@ -253,9 +253,9 @@ class mainGame:
             self.move_back = Button(self,800,550,410,175,(0,0,0),(240,240,240),"Back","pokemon_pixel_font.ttf",70,False,2,disable=True)
             self.move_back_outline = Button(self,795,545,420,185,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2,disable=True)
 
-            self.enemy_hp_bar = hp_bars(self,self.config,self.encountered_pokemon,self.encountered_pokemon.hp,(0,0,400,150),"pokemon_pixel_font.ttf")
+            self.enemy_hp_bar = hp_bars(self,self.config,self.encountered_pokemon,0,(0,0,400,150),"pokemon_pixel_font.ttf")
 
-            self.dawn1_hp_bar = hp_bars(self,self.config,self.dawnPokemon,self.dawnPokemon.hp,(0,0,400,150),"pokemon_pixel_font.ttf")
+            self.dawn1_hp_bar = hp_bars(self,self.config,self.dawnPokemon,0,(0,0,400,150),"pokemon_pixel_font.ttf")
 
         else:
             self.draw()
@@ -356,15 +356,18 @@ class mainGame:
                 self.screen.blit(self.move_back_outline.image,self.move_back_outline.rect)
                 self.screen.blit(self.move_back.image,self.move_back.rect)
 
-            if self.text_state == 10:
+            if self.text_state == 11:
+                self.fainted = False
                 if self.dawnPokemon.speed >= self.encountered_pokemon.speed:
                     dawn_dmg = self.calc_damage(1,self.dawnPokemon,self.encountered_pokemon)
                     wild_dmg = self.calc_damage(1,self.encountered_pokemon,self.dawnPokemon)
-                    self.enemy_hp_bar = hp_bars(self,self.config,self.encountered_pokemon,dawn_dmg,(0,0,400,150),"pokemon_pixel_font.ttf")
-                    self.dawn1_hp_bar = hp_bars(self,self.config,self.dawnPokemon,wild_dmg,(0,0,400,150),"pokemon_pixel_font.ttf")
-                    print(self.encountered_pokemon.hp,"Hp")
+                    self.enemy_hp_bar = hp_bars(self,self.config,self.encountered_pokemon,1000,(0,0,400,150),"pokemon_pixel_font.ttf")
+                    if self.fainted:
+                        pass
+                    else:
+                        self.dawn1_hp_bar = hp_bars(self,self.config,self.dawnPokemon,wild_dmg,(0,0,400,150),"pokemon_pixel_font.ttf")
                     self.text_state = 5
-                    self.turn = 1
+                    self.turn = 0
 
             
             if self.hide_button == False:
