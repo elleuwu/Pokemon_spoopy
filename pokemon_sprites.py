@@ -364,6 +364,9 @@ class Button:
             self.mainGame.battle_music = False
             self.mainGame.encounter_anim = False
 
+        elif state == 10:
+            pass
+
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self,mainGame,config,x,y,rectx,recty):
@@ -702,18 +705,25 @@ class DawnPokemon(pygame.sprite.Sprite,pokemon_prop):
         pass
 
 class hp_bars():
-    def __init__(self,mainGame,config,pokemon,rect,font):
+    def __init__(self,mainGame,config,pokemon,dmg,rect,font):
         self.mainGame = mainGame
         self.config = config
         self.pokemon = pokemon
         self.name = self.pokemon.name
         self.max_hp = self.pokemon.hp
-        self.current_hp = self.pokemon.hp//2
+        if self.mainGame.turn == 0:
+            self.current_hp = self.pokemon.hp-dmg
+        else:
+            self.current_hp = self.current_hp-dmg
         self.lvl = self.pokemon.level
         self.rect = pygame.Rect(rect)
         self.nameFont = pygame.font.Font(font,60)
         self.lvlFont = pygame.font.Font(font,60)
-        self.hp_percentage = (self.current_hp/self.max_hp)
+        print(self.max_hp,self.current_hp,"HP2")
+        if self.current_hp == 0:
+            self.hp_percentage = self.current_hp+1
+        else:
+            self.hp_percentage = (self.max_hp/self.current_hp)
 
         self.background = pygame.Surface((self.rect.width-10,self.rect.height-10))
         self.background.fill((240,240,240))

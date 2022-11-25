@@ -194,7 +194,6 @@ class mainGame:
 
                             if self.move1.is_pressed(event.pos):
                                 self.text_state = 10
-                                self.calc_damage(1,self.dawnPokemon,self.encountered_pokemon)
                             if self.move2.is_pressed(event.pos):
                                 self.text_state = 11
                             if self.move3.is_pressed(event.pos):
@@ -254,9 +253,9 @@ class mainGame:
             self.move_back = Button(self,800,550,410,175,(0,0,0),(240,240,240),"Back","pokemon_pixel_font.ttf",70,False,2,disable=True)
             self.move_back_outline = Button(self,795,545,420,185,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2,disable=True)
 
-            self.enemy_hp_bar = hp_bars(self,self.config,self.encountered_pokemon,(0,0,400,150),"pokemon_pixel_font.ttf")
+            self.enemy_hp_bar = hp_bars(self,self.config,self.encountered_pokemon,self.encountered_pokemon.hp,(0,0,400,150),"pokemon_pixel_font.ttf")
 
-            self.dawn1_hp_bar = hp_bars(self,self.config,self.dawnPokemon,(0,0,400,150),"pokemon_pixel_font.ttf")
+            self.dawn1_hp_bar = hp_bars(self,self.config,self.dawnPokemon,self.dawnPokemon.hp,(0,0,400,150),"pokemon_pixel_font.ttf")
 
         else:
             self.draw()
@@ -356,6 +355,17 @@ class mainGame:
 
                 self.screen.blit(self.move_back_outline.image,self.move_back_outline.rect)
                 self.screen.blit(self.move_back.image,self.move_back.rect)
+
+            if self.text_state == 10:
+                if self.dawnPokemon.speed >= self.encountered_pokemon.speed:
+                    dawn_dmg = self.calc_damage(1,self.dawnPokemon,self.encountered_pokemon)
+                    wild_dmg = self.calc_damage(1,self.encountered_pokemon,self.dawnPokemon)
+                    self.enemy_hp_bar = hp_bars(self,self.config,self.encountered_pokemon,dawn_dmg,(0,0,400,150),"pokemon_pixel_font.ttf")
+                    self.dawn1_hp_bar = hp_bars(self,self.config,self.dawnPokemon,wild_dmg,(0,0,400,150),"pokemon_pixel_font.ttf")
+                    print(self.encountered_pokemon.hp,"Hp")
+                    self.text_state = 5
+                    self.turn = 1
+
             
             if self.hide_button == False:
                 self.screen.blit(self.mainTextOutline.image,(self.mainTextOutline.rect))
@@ -395,8 +405,8 @@ class mainGame:
             else:
                 type2_dmg = 1
 
-            damage = (((((((2*level)//5)+2)*90*(atk_pokemon.spA//def_pokemon.spD))//50)+2)*random.randint(1,2)*(random.randint(85,100)/100)*stab*type1_dmg*type2_dmg)
-        print(int(damage))
+            damage = (((((((2*level)//5)+2)*95*(atk_pokemon.spA//def_pokemon.spD))//50)+2)*random.randint(1,2)*(random.randint(85,100)/100)*stab*type1_dmg*type2_dmg)
+        print(int(damage),"Damage")
         return damage
 
     def start_screen(self):
