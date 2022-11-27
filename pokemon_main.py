@@ -30,7 +30,12 @@ class mainGame:
         self.text_box = pygame.image.load("sprites//text_box.png")
         self.battle_background = pygame.image.load("Battle Background.png")
 
-        self.pokemon_names = open("pokemon-properties.csv","r")
+        self.pokemon_properties = open("pokemon-properties.csv","r")
+        reader = csv.reader(self.pokemon_properties)
+        self.legendaries = []
+        for lines in reader:
+            if lines[12] == "TRUE":
+                self.legendaries.append(int(lines[0]))
 
         self.all_sprite_group = pygame.sprite.LayeredUpdates()
         self.player_sprite_group = pygame.sprite.LayeredUpdates()
@@ -81,20 +86,22 @@ class mainGame:
         self.encountered = False
         self.battle_music = False
         self.in_battle = False
-        self.turn = 500
+        self.turn = 0
         self.text_state = 0
         self.sub_state = 0
-        self.mainText = NULL
+        self.mainText = Button(self,15,581,750,150,(0,0,0),(230,230,230),"","pokemon_pixel_font.ttf",70,False,2)
         self.hide_button = False
         self.intro_anim = False
         self.encounter_anim = False
         self.overworld_music_playing = False
+        self.dmg_once = False
+        self.dawn_dmg,self.wild_dmg = 0,0
 
         self.battle_music_list = ["Music\\Necrozma battle song.wav","Music\\Vs blue battle song.wav","Music\\Vs cyrus battle song.wav","Music\\Zekrom reshiram battle song.wav"]
 
-        self.pkmn_natures = Enum("Natures",[("Hardy",1),("Lonely",2),("Brave",3),("Adamant",4),("Naughty",5),("Bold",6),("Docile",7),("Relaxed",8),
+        self.pkmn_natures = Enum("Natures",[("Sassy",1),("Lonely",2),("Brave",3),("Adamant",4),("Naughty",5),("Bold",6),("Docile",7),("Relaxed",8),
                                             ("Impish",9),("Lax",10),("Timid",11),("Hasty",12),("Serious",13),("Jolly",14),("Naive",15),("Modest",16),
-                                            ("Mild",17),("Quiet",18),("Bashful",19),("Rash",20),("Calm",21),("Gentle",22),("Sassy",23),("Careful",24),
+                                            ("Mild",17),("Quiet",18),("Bashful",19),("Rash",20),("Calm",21),("Gentle",22),("Hardy",23),("Careful",24),
                                             ("Quirky",25)])
 
     def createMap(self):
@@ -162,7 +169,9 @@ class mainGame:
 
     def encounter_events(self):
 
+        print(self.dawn_dmg,self.wild_dmg)
         for event in pygame.event.get():
+
             if event.type == pygame.QUIT:
                 sys.exit()
             if event.type == pygame.KEYDOWN:
@@ -170,7 +179,7 @@ class mainGame:
                     sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    if self.text_state < 5 or self.text_state == 10:
+                    if self.text_state < 5:
                         if self.mainText.is_pressed(event.pos):
                             self.text_state+=1
                     else:
@@ -183,23 +192,116 @@ class mainGame:
                         if self.run.is_pressed(event.pos):
                             self.text_state = 9
 
-                        if self.text_state == 6:
-                            if self.move_back.is_pressed(event.pos):
-                                if self.move_back.disable:
-                                    time.sleep(0.01)
-                                    self.move_back.disable = False
-                                else:
-                                    self.text_state = 5
-                                    self.move_back.disable = True
+                    if self.text_state == 6:
+                        if self.move_back.is_pressed(event.pos):
+                            if self.move_back.disable:
+                                time.sleep(0.01)
+                                self.move_back.disable = False
+                            else:
+                                self.text_state = 5
+                                self.move_back.disable = True
 
-                            if self.move1.is_pressed(event.pos):
-                                self.text_state = 11
-                            if self.move2.is_pressed(event.pos):
-                                self.text_state = 0
-                            if self.move3.is_pressed(event.pos):
-                                self.text_state = 0
-                            if self.move4.is_pressed(event.pos):
-                                self.text_state = 0
+                        if self.move1.is_pressed(event.pos):
+                            self.text_state = 10
+                            self.move = "Flamethrower"
+                        if self.move2.is_pressed(event.pos):
+                            self.text_state = 10
+                            self.move = "Hydro pump"
+                        if self.move3.is_pressed(event.pos):
+                            self.text_state = 10
+                            self.move = "Thunderbolt"
+                        if self.move4.is_pressed(event.pos):
+                            self.text_state = 10
+                            self.move = "Hyper fang"
+
+                    if self.text_state == 11:
+                        if self.mainText.is_pressed(event.pos):
+                            self.dmg_once = False
+                            if self.enemy_hp_bar.hp_anim:
+                                pass
+                            else:
+                                if self.fainted:
+                                    self.text_state = 15
+                                    self.mainText.disable = True
+                                else:
+                                    if self.first_move:
+                                        if self.dawn_dmg[1]:
+                                            self.text_state = 13
+                                            self.mainText.disable = True
+                                            self.end = False
+                                            self.state = 11
+                                        else:
+                                            self.text_state = 12
+                                    else:
+                                        if self.dawn_dmg[1]:
+                                            self.text_state = 13
+                                            self.mainText.disable = True
+                                            self.end = True
+                                        else:
+                                            self.text_state = 5
+                                            self.turn +=1
+
+
+
+                    elif self.text_state == 12:
+                        if self.mainText.is_pressed(event.pos):
+                            self.dmg_once = False
+                            if self.dawn1_hp_bar.hp_anim:
+                                pass
+                            else:
+                                if self.fainted:
+                                    self.text_state = 14
+                                    self.mainText.disable = True
+                                else:
+                                    if self.first_move:
+                                        if self.wild_dmg[1]:
+                                            self.text_state = 13
+                                            self.mainText.disable = True
+                                            self.end = True
+                                        else:
+                                            self.text_state = 5
+                                            self.turn += 1
+                                    else:
+                                        if self.wild_dmg[1]:
+                                            self.text_state = 13
+                                            self.mainText.disable = True
+                                            self.end = False
+                                            self.state = 12
+                                        else:
+                                            self.text_state = 11
+
+                    if self.text_state == 13:
+                        if self.mainText.is_pressed(event.pos):
+                            if self.mainText.disable:
+                                time.sleep(0.01)
+                                self.mainText.disable = False
+                            else:
+                                if self.end:
+                                    self.text_state = 5
+                                    self.turn = 1
+                                    self.crit = False
+                                else:
+                                    if self.state == 11:
+                                        self.text_state = 12
+                                        self.crit = False
+                                    else:
+                                        self.text_state = 11
+                                        self.crit = False
+
+                    if self.text_state == 14:
+                        if self.mainText.is_pressed(event.pos):
+                            if self.mainText.disable:
+                                time.sleep(0.01)
+                                self.mainText.disable = False
+                            else:   
+                                self.text_state = 9
+                    if self.text_state == 15:
+                        if self.mainText.is_pressed(event.pos):
+                            if self.mainText.disable:
+                                time.sleep(0.01)
+                                self.mainText.disable = False
+                            else:   
+                                self.text_state = 9
 
         if self.canEncounter == True:
             if not self.enc_timer_started:
@@ -220,11 +322,12 @@ class mainGame:
             self.turn = 0
             self.encounter_anim = True
 
-            self.mainText = Button(self,15,581,750,150,(0,0,0),(230,230,230),"","pokemon_pixel_font.ttf",70,False,2)
+            self.mainText = Button(self,15,581,750,150,(0,0,0),(230,230,230),"","pokemon_pixel_font.ttf",70,False,2,disable=True)
             self.mainTextOutline = Button(self,10,576,760,160,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
 
             self.dawn = DawnThrowPokemon(self,self.config,0,13)
-            self.dawnPokemon = DawnPokemon(self,self.config,2,8,(1280,1360,80,80),493)
+            self.player_pokemon = self.random_pokemon(130,False)
+            self.dawnPokemon = DawnPokemon(self,self.config,2,9,self.player_pokemon,130)
 
             self.fight = Button(self,800,576,200,70,(0,0,0),(240,240,240),"Fight","pokemon_pixel_font.ttf",70,False,2)
             self.fightOutline = Button(self,795,571,210,80,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
@@ -238,14 +341,14 @@ class mainGame:
             self.run = Button(self,1015,661,200,70,(0,0,0),(240,240,240),"Run","pokemon_pixel_font.ttf",70,False,2)
             self.runOutline = Button(self,1010,656,210,80,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
 
-            self.move1 = Button(self,15,581,365,65,(0,0,0),(255, 51, 63),"Flamethrower","pokemon_pixel_font.ttf",70,False,2)
-            self.move1_outline = Button(self,10,576,375,75,(0,0,0),(255, 0, 15),"","pokemon_pixel_font.ttf",70,False,2)
+            self.move1 = Button(self,15,581,365,65,(0,0,0),(240,240,240),"Flamethrower","pokemon_pixel_font.ttf",70,False,2)
+            self.move1_outline = Button(self,10,576,375,75,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
 
-            self.move2 = Button(self,395,581,365,65,(0,0,0),(13, 181, 254),"Hydro pump","pokemon_pixel_font.ttf",70,False,2)
-            self.move2_outline = Button(self,390,576,375,75,(0,0,0),(1, 150, 215),"","pokemon_pixel_font.ttf",70,False,2)
+            self.move2 = Button(self,395,581,365,65,(0,0,0),(240,240,240),"Hydro pump","pokemon_pixel_font.ttf",70,False,2)
+            self.move2_outline = Button(self,390,576,375,75,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
 
-            self.move3 = Button(self,15,661,365,65,(0,0,0),(233, 241, 16),"Thunderbolt","pokemon_pixel_font.ttf",70,False,2)
-            self.move3_outline = Button(self,10,656,375,75,(0,0,0),(188, 195, 11),"","pokemon_pixel_font.ttf",70,False,2)
+            self.move3 = Button(self,15,661,365,65,(0,0,0),(240,240,240),"Thunderbolt","pokemon_pixel_font.ttf",70,False,2)
+            self.move3_outline = Button(self,10,656,375,75,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
 
             self.move4 = Button(self,395,661,365,65,(0,0,0),(240,240,240),"Hyper fang","pokemon_pixel_font.ttf",70,False,2)
             self.move4_outline = Button(self,390,656,375,75,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
@@ -260,11 +363,23 @@ class mainGame:
         else:
             self.draw()
 
-    def random_pokemon(self):
-        self.random_pokemon_num = random.randint(0,493)
+    def random_pokemon(self,set_mon=0,randoms=True):
+        if randoms:
+            self.random_pokemon_num = random.randint(0,493)
+            for i in self.legendaries:
+                if i == self.random_pokemon_num:
+                    keep_legendary = random.random()
+                    if keep_legendary <= 0.5:
+                        self.random_pokemon_num = random.randint(0,493)
+        else:
+            self.random_pokemon_num = set_mon
+
         pkmn_y = ((self.random_pokemon_num*80)//2240)
         pkmn_x = (self.random_pokemon_num-(28*(pkmn_y)))
-        rect = pygame.Rect((pkmn_x*80)-80,pkmn_y*80,80,80)
+        if pkmn_x == 0:
+            rect = pygame.Rect(pkmn_x*80,pkmn_y*80,80,80)
+        else:
+            rect = pygame.Rect((pkmn_x*80)-80,pkmn_y*80,80,80)
         return rect
         
 
@@ -293,7 +408,7 @@ class mainGame:
         self.clock.tick(self.fps)
 
     def draw_encounter(self):
-        if self.turn == 0:
+        if self.turn >= 0:
             self.mainText.text_state(self.text_state)
             frame_counter = 0
             while self.encounter_anim:
@@ -331,6 +446,7 @@ class mainGame:
             if self.text_state >= 4:
                 self.trainer_pokemon_group.draw(self.screen)
                 self.screen.blit(self.dawn1_hp_bar.background_outline,(100,100))
+                self.screen.blit(self.enemy_hp_bar.background_outline,(750,25))
 
             if self.text_state == 5:
                 self.screen.blit(self.fightOutline.image,self.fightOutline.rect)
@@ -356,19 +472,22 @@ class mainGame:
                 self.screen.blit(self.move_back_outline.image,self.move_back_outline.rect)
                 self.screen.blit(self.move_back.image,self.move_back.rect)
 
-            if self.text_state == 11:
+            if self.text_state == 10:
                 self.fainted = False
-                if self.dawnPokemon.speed >= self.encountered_pokemon.speed:
-                    dawn_dmg = self.calc_damage(1,self.dawnPokemon,self.encountered_pokemon)
-                    wild_dmg = self.calc_damage(1,self.encountered_pokemon,self.dawnPokemon)
-                    self.enemy_hp_bar = hp_bars(self,self.config,self.encountered_pokemon,1000,(0,0,400,150),"pokemon_pixel_font.ttf")
-                    if self.fainted:
-                        pass
-                    else:
-                        self.dawn1_hp_bar = hp_bars(self,self.config,self.dawnPokemon,wild_dmg,(0,0,400,150),"pokemon_pixel_font.ttf")
-                    self.text_state = 5
-                    self.turn = 0
+                self.dmg_once = False
+                self.random_move = random.randint(0,4)
+                self.dawn_dmg = self.calc_damage(self.move,self.dawnPokemon,self.encountered_pokemon)
+                self.wild_dmg = self.calc_damage(self.move,self.encountered_pokemon,self.dawnPokemon)
 
+                if self.dawnPokemon.speed >= self.encountered_pokemon.speed:
+                    self.first_move = True
+                if self.dawnPokemon.speed < self.encountered_pokemon.speed:
+                    self.first_move = False
+
+                if self.first_move:
+                    self.text_state = 11
+                else:
+                    self.text_state = 12
             
             if self.hide_button == False:
                 self.screen.blit(self.mainTextOutline.image,(self.mainTextOutline.rect))
@@ -377,9 +496,7 @@ class mainGame:
             if self.hide_button == True:
                 self.trainer_intro_group.draw(self.screen)
 
-
             self.clock.tick(self.fps)
-            self.screen.blit(self.enemy_hp_bar.background_outline,(750,25))
             self.battle_sprite_group.draw(self.screen)
 
         pygame.display.update()
@@ -389,18 +506,21 @@ class mainGame:
         atk_pokemon = pokemon1
         def_pokemon = pokemon2
         level = atk_pokemon.level
-        
-        if move_used == 1:
-            if atk_pokemon.type1 == "Fire":
+
+        if move_used == "Flamethrower":
+            if atk_pokemon.type1 == "Fire" or atk_pokemon.type2 == "Fire":
                 stab = 1.5
             else:
                 stab = 1
+
             if def_pokemon.type1 == "Grass" or def_pokemon.type1 == "Ice" or def_pokemon.type1 == "Bug" or def_pokemon.type1 == "Steel":
                 type1_dmg = 2
+
             elif def_pokemon.type1 == "Fire" or def_pokemon.type1 == "Water" or def_pokemon.type1 == "Rock" or def_pokemon.type1 == "Dragon":
                 type1_dmg = 0.5
             else:
                 type1_dmg = 1
+
             if def_pokemon.type2 == "Grass" or def_pokemon.type2 == "Ice" or def_pokemon.type2 == "Bug" or def_pokemon.type2 == "Steel":
                 type2_dmg = 2
             elif def_pokemon.type2 == "Fire" or def_pokemon.type2 == "Water" or def_pokemon.type2 == "Rock" or def_pokemon.type2 == "Dragon":
@@ -408,9 +528,160 @@ class mainGame:
             else:
                 type2_dmg = 1
 
-            damage = (((((((2*level)//5)+2)*95*(atk_pokemon.spA//def_pokemon.spD))//50)+2)*random.randint(1,2)*(random.randint(85,100)/100)*stab*type1_dmg*type2_dmg)
-        print(int(damage),"Damage")
-        return damage
+            crit_hit = random.random()
+            if crit_hit <=0.12:
+                crit_dmg = 2
+                crit = True
+            else:
+                crit_dmg = 1
+                crit = False
+
+            random_hit = random.random()*100
+            if random_hit <=2.56:
+                random_dmg = 100
+            elif random_hit <=5.13:
+                dmg = [86,88,91,93,95,97,99]
+                random_dmg = dmg[random.randint(0,6)]
+            elif random_hit <= 7.69:
+                dmg = [85,87,89,90,92,94,96,98]
+                random_dmg = dmg[random.randint(0,7)]
+            else:
+                random_dmg = 93
+            damage = (((((((2*level)/5)+2)*95*(atk_pokemon.spA/def_pokemon.spD))/50)+2)*(crit_dmg*random_dmg*stab*type1_dmg*type2_dmg)/100)
+            int_damage = round(damage)
+            print(int_damage)
+
+
+        if move_used == "Hydro pump":
+            if atk_pokemon.type1 == "Water" or atk_pokemon.type2 == "Water":
+                stab = 1.5
+            else:
+                stab = 1
+
+            if def_pokemon.type1 == "Fire" or def_pokemon.type1 == "Ground" or def_pokemon.type1 == "Rock":
+                type1_dmg = 2
+            elif def_pokemon.type1 == "Water" or def_pokemon.type1 == "Grass" or def_pokemon.type1 == "Dragon":
+                type1_dmg = 0.5
+            else:
+                type1_dmg = 1
+
+            if def_pokemon.type2 == "Fire" or def_pokemon.type2 == "Ground" or def_pokemon.type2 == "Rock":
+                type2_dmg = 2
+            elif def_pokemon.type2 == "Water" or def_pokemon.type2 == "Grass" or def_pokemon.type2 == "Dragon":
+                type2_dmg = 0.5
+            else:
+                type2_dmg = 1
+
+            crit_hit = random.random()
+            if crit_hit <=0.12:
+                crit_dmg = 2
+                crit = True
+            else:
+                crit_dmg = 1
+                crit = False
+
+            random_hit = random.random()*100
+            if random_hit <=2.56:
+                random_dmg = 100
+            elif random_hit <=5.13:
+                dmg = [86,88,91,93,95,97,99]
+                random_dmg = dmg[random.randint(0,6)]
+            elif random_hit <= 7.69:
+                dmg = [85,87,89,90,92,94,96,98]
+                random_dmg = dmg[random.randint(0,7)]
+            else:
+                random_dmg = 93
+
+            damage = (((((((2*level)/5)+2)*120*(atk_pokemon.spA/def_pokemon.spD))/50)+2)*(crit_dmg*random_dmg*stab*type1_dmg*type2_dmg)/100)
+            int_damage = round(damage)
+            print(int_damage)
+
+
+        if move_used == "Thunderbolt":
+            if atk_pokemon.type1 == "Electric" or atk_pokemon.type2 == "Electric":
+                stab = 1.5
+            else:
+                stab = 1
+
+            if def_pokemon.type1 == "Water" or def_pokemon.type1 == "Flying":
+                type1_dmg = 2
+            elif def_pokemon.type1 == "Electric" or def_pokemon.type1 == "Grass" or def_pokemon.type1 == "Dragon":
+                type1_dmg = 0.5
+            else:
+                type1_dmg = 1
+
+            if def_pokemon.type2 == "Water" or def_pokemon.type2 == "Flying":
+                type2_dmg = 2
+            elif def_pokemon.type2 == "Electric" or def_pokemon.type2 == "Grass" or def_pokemon.type2 == "Dragon":
+                type2_dmg = 0.5
+            else:
+                type2_dmg = 1
+
+            crit_hit = random.random()
+            if crit_hit <=0.12:
+                crit_dmg = 2
+                crit = True
+            else:
+                crit_dmg = 1
+                crit = False
+
+            random_hit = random.random()*100
+            if random_hit <=2.56:
+                random_dmg = 100
+            elif random_hit <=5.13:
+                dmg = [86,88,91,93,95,97,99]
+                random_dmg = dmg[random.randint(0,6)]
+            elif random_hit <= 7.69:
+                dmg = [85,87,89,90,92,94,96,98]
+                random_dmg = dmg[random.randint(0,7)]
+            else:
+                random_dmg = 93
+
+            damage = (((((((2*level)/5)+2)*95*(atk_pokemon.spA/def_pokemon.spD))/50)+2)*(crit_dmg*random_dmg*stab*type1_dmg*type2_dmg)/100)
+            int_damage = round(damage)
+            print(int_damage)
+
+        if move_used == "Hyper fang":
+            if atk_pokemon.type1 == "Normal" or atk_pokemon.type2 == "Normal":
+                stab = 1.5
+            else:
+                stab = 1
+
+            if def_pokemon.type1 == "Rock" or def_pokemon.type1 == "Steel":
+                type1_dmg = 0.5
+            else:
+                type1_dmg = 1
+
+            if def_pokemon.type2 == "Rock" or def_pokemon.type2 == "Steel":
+                type2_dmg = 0.5
+            else:
+                type2_dmg = 1
+
+            crit_hit = random.random()
+            if crit_hit <=0.12:
+                crit_dmg = 2
+                crit = True
+            else:
+                crit_dmg = 1
+                crit = False
+
+            random_hit = random.random()*100
+            if random_hit <=2.56:
+                random_dmg = 100
+            elif random_hit <=5.13:
+                dmg = [86,88,91,93,95,97,99]
+                random_dmg = dmg[random.randint(0,6)]
+            elif random_hit <= 7.69:
+                dmg = [85,87,89,90,92,94,96,98]
+                random_dmg = dmg[random.randint(0,7)]
+            else:
+                random_dmg = 93
+
+            damage = (((((((2*level)/5)+2)*80*(atk_pokemon.atk/def_pokemon.defn))/50)+2)*(crit_dmg*random_dmg*stab*type1_dmg*type2_dmg)/100)
+            int_damage = round(damage)
+            print(int_damage)
+        properties = [int_damage,crit]
+        return properties
 
     def start_screen(self):
         intro = True
