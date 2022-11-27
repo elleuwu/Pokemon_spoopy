@@ -269,7 +269,7 @@ class Ground(pygame.sprite.Sprite):
         self.rect.y = self.y
 
 class Button:
-    def __init__(self,mainGame,x,y,width,height,fg,bg,content,font,fontsize,colorkey,scale,image_to_load = False,disable = False):
+    def __init__(self,mainGame,x,y,width,height,fg,bg,content,font,fontsize,colorkey,scale,image_to_load = 0,disable = False):
 
         self.mainGame = mainGame
 
@@ -286,7 +286,7 @@ class Button:
         self.bg = bg
         self.disable = disable
 
-        if image_to_load:
+        if image_to_load != 0:
             img = pygame.transform.scale(image_to_load,(int(width*scale),int(height*scale)))
             img_rect = img.get_rect()
             self.image = pygame.Surface((width,height))
@@ -301,13 +301,13 @@ class Button:
             if colorkey == True:
                 self.image.set_colorkey(self.bg)
 
-            self.rect = self.image.get_rect()
-            self.rect.x = self.x
-            self.rect.y = self.y
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x
+        self.rect.y = self.y
 
-            self.text = self.font.render(self.content,True,self.fg)
-            self.text_rect = self.text.get_rect(center=(self.width/2,self.height/2))
-            self.image.blit(self.text,self.text_rect)
+        self.text = self.font.render(self.content,True,self.fg)
+        self.text_rect = self.text.get_rect(center=(self.width/2,self.height/2))
+        self.image.blit(self.text,self.text_rect)
 
     def is_pressed(self,pos):
         if self.rect.collidepoint(pos):

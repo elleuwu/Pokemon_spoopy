@@ -149,8 +149,6 @@ class mainGame:
                         self.encounter_events()
                         self.updates_encounter()
                         self.draw_encounter()
-
-
             else:
                 self.events()
                 self.updates()
@@ -722,20 +720,18 @@ class mainGame:
     def text_screen(self):
 
         trainer_name = self.fontsP.render("Trainer",True,(0,0,0))
-        trainer_name_rect = trainer_name.get_rect(x=175,y=600)
+        trainer_name_rect = trainer_name.get_rect(x=175,y=580)
 
         color = (255,255,255)
 
-        text_box = Button(self,90,580,700,200,(0,0,0),(225,225,225),"So you want to battle? Fine!","pokemon_pixel_font.ttf",60,True,1,self.text_box)
+        text_box = Button(self,90,560,700,200,(0,0,0),(225,225,225),"So you want to battle? Fine!","pokemon_pixel_font.ttf",60,True,1,self.text_box)
 
-        options_y = Button(self,800,615,100,45,(0,0,0),color,"Yes","pokemon_pixel_font.ttf",60,False,1)
-        options_outline_y = Button(self,795,610,110,55,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",60,False,1)
+        options_y = Button(self,800,585,100,45,(0,0,0),color,"Yes","pokemon_pixel_font.ttf",60,False,1)
+        options_outline_y = Button(self,795,580,110,55,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",60,False,1)
 
-        options_n = Button(self,800,680,100,45,(0,0,0),color,"No","pokemon_pixel_font.ttf",60,False,1)
-        options_outline_n = Button(self,795,675,110,55,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",60,False,1)
+        options_n = Button(self,800,660,100,45,(0,0,0),color,"No","pokemon_pixel_font.ttf",60,False,1)
+        options_outline_n = Button(self,795,655,110,55,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",60,False,1)
 
-        mouse_pos = pygame.mouse.get_pos()
-        mouse_pressed = pygame.mouse.get_pressed()
 
         self.screen.blit(text_box.image,text_box.rect)
         self.screen.blit(trainer_name,trainer_name_rect)
@@ -756,7 +752,8 @@ class mainGame:
                         self.screen.blit(options_n.image,options_n.rect)
 
                     if options_y.is_pressed(event.pos):
-                        pass
+                        self.talk_trainer = False
+
                     if options_n.is_pressed(event.pos):
                         self.talk_trainer = False
 
