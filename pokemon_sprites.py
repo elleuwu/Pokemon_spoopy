@@ -3,6 +3,7 @@ from difflib import Match
 from distutils.command.config import config
 import pygame, random, threading, csv,time
 
+#Hi from aaban
 
 class SpriteSheet:
     def __init__(self,spritesheet):
@@ -242,7 +243,10 @@ class Player(pygame.sprite.Sprite):
             self.mainGame.canEncounter = True
             
         else:
-            self.mainGame.canEncounter = False
+            if self.mainGame.trainer_battle == True:
+                pass
+            else:
+                self.mainGame.canEncounter = False
 
 
 class Ground(pygame.sprite.Sprite):
@@ -368,13 +372,14 @@ class Button:
             self.mainGame.dawnPokemon.kill()
             self.mainGame.battle_music = False
             self.mainGame.encounter_anim = False
+            self.mainGame.trainer_battle = False
             self.mainGame.turn = 0
 
         elif state == 11:
             self.mainGame.enemy_hp_bar = hp_bars(self.mainGame,self.mainGame.config,self.mainGame.encountered_pokemon,self.mainGame.dawn_dmg[0],(0,0,400,150),"pokemon_pixel_font.ttf")
             self.mainGame.hide_button = False
             self.image.fill(self.bg)
-            self.content = f"{self.mainGame.dawnPokemon.name} used {self.mainGame.move}!"
+            self.content = f"{self.mainGame.dawnPokemon.name} used {self.mainGame.dawn_dmg[2]}!"
             self.text = self.font.render(self.content,True,self.fg)
             self.text_rect = self.text.get_rect(center=(self.width/2,self.height/2))
             self.image.blit(self.text,self.text_rect)
@@ -384,7 +389,7 @@ class Button:
             self.mainGame.dawn1_hp_bar = hp_bars(self.mainGame,self.mainGame.config,self.mainGame.dawnPokemon,self.mainGame.wild_dmg[0],(0,0,400,150),"pokemon_pixel_font.ttf")
             self.mainGame.hide_button = False
             self.image.fill(self.bg)
-            self.content = f"{self.mainGame.encountered_pokemon.name} used {self.mainGame.move}!"
+            self.content = f"{self.mainGame.encountered_pokemon.name} used {self.mainGame.wild_dmg[2]}!"
             self.text = self.font.render(self.content,True,self.fg)
             self.text_rect = self.text.get_rect(center=(self.width/2,self.height/2))
             self.image.blit(self.text,self.text_rect)
@@ -634,8 +639,6 @@ class pokemon_prop():
             self.stats[i] = round(self.stats[i])
         print(self.base,self.ivs,self.evs,self.stats)
 
-
-
 class Pokemon(pygame.sprite.Sprite,pokemon_prop):
     def __init__(self,mainGame,config,x,y,rect,num):
         self.mainGame = mainGame
@@ -822,7 +825,28 @@ class hp_bars():
         self.background.blit(self.pkmn_lvl,self.lvl_rect)
         self.background_outline.blit(self.background,(self.rect.x+5,self.rect.y+5,self.rect.width,self.rect.height))
 
+class pokemonAI():
+    def __init__(self,mainGame,pokemon1,pokemon2):
+        self.mainGame = mainGame
+        self.pokemon = pokemon2
+        self.target = pokemon1
+        self.effective = 0
+        self.possible_moves = []
 
+    def supereffective(self):
+        if self.mainGame.calc_damage(1,self.pokemon,self.target)[3] == 2:
+            self.effective = 2
+            self.possible_moves.append(1)
+        if self.mainGame.calc_damage(2,self.pokemon,self.target)[3] == 2:
+            self.effective = 2
+            self.possible_moves.append(2)
+        if self.mainGame.calc_damage(3,self.pokemon,self.target)[3] == 2:
+            self.effective = 2
+            self.possible_moves.append(3)
+        if self.mainGame.calc_damage(4,self.pokemon,self.target)[3] == 2:
+            self.effective = 2
+            self.possible_moves.append(3)
+        print(self.possible_moves)
 
 
 

@@ -96,6 +96,7 @@ class mainGame:
         self.overworld_music_playing = False
         self.dmg_once = False
         self.dawn_dmg,self.wild_dmg = 0,0
+        self.trainer_battle = False
 
         self.battle_music_list = ["Music\\Necrozma battle song.wav","Music\\Vs blue battle song.wav","Music\\Vs cyrus battle song.wav","Music\\Zekrom reshiram battle song.wav"]
 
@@ -167,7 +168,6 @@ class mainGame:
 
     def encounter_events(self):
 
-        print(self.dawn_dmg,self.wild_dmg)
         for event in pygame.event.get():
 
             if event.type == pygame.QUIT:
@@ -201,16 +201,16 @@ class mainGame:
 
                         if self.move1.is_pressed(event.pos):
                             self.text_state = 10
-                            self.move = "Flamethrower"
+                            self.move = 1
                         if self.move2.is_pressed(event.pos):
                             self.text_state = 10
-                            self.move = "Hydro pump"
+                            self.move = 2
                         if self.move3.is_pressed(event.pos):
                             self.text_state = 10
-                            self.move = "Thunderbolt"
+                            self.move = 3
                         if self.move4.is_pressed(event.pos):
                             self.text_state = 10
-                            self.move = "Hyper fang"
+                            self.move = 4
 
                     if self.text_state == 11:
                         if self.mainText.is_pressed(event.pos):
@@ -286,20 +286,14 @@ class mainGame:
                                         self.text_state = 11
                                         self.crit = False
 
-                    if self.text_state == 14:
+                    if self.text_state == 14 or self.text_state == 15:
                         if self.mainText.is_pressed(event.pos):
                             if self.mainText.disable:
                                 time.sleep(0.01)
                                 self.mainText.disable = False
                             else:   
                                 self.text_state = 9
-                    if self.text_state == 15:
-                        if self.mainText.is_pressed(event.pos):
-                            if self.mainText.disable:
-                                time.sleep(0.01)
-                                self.mainText.disable = False
-                            else:   
-                                self.text_state = 9
+
 
         if self.canEncounter == True:
             if not self.enc_timer_started:
@@ -324,8 +318,8 @@ class mainGame:
             self.mainTextOutline = Button(self,10,576,760,160,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
 
             self.dawn = DawnThrowPokemon(self,self.config,0,13)
-            self.player_pokemon = self.random_pokemon(130,False)
-            self.dawnPokemon = DawnPokemon(self,self.config,2,9,self.player_pokemon,130)
+            self.player_pokemon = self.random_pokemon(250,False)
+            self.dawnPokemon = DawnPokemon(self,self.config,2,9,self.player_pokemon,250)
 
             self.fight = Button(self,800,576,200,70,(0,0,0),(240,240,240),"Fight","pokemon_pixel_font.ttf",70,False,2)
             self.fightOutline = Button(self,795,571,210,80,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
@@ -358,6 +352,8 @@ class mainGame:
 
             self.dawn1_hp_bar = hp_bars(self,self.config,self.dawnPokemon,0,(0,0,400,150),"pokemon_pixel_font.ttf")
 
+            self.pokemonai = pokemonAI(self,self.dawnPokemon,self.encountered_pokemon)
+
         else:
             self.draw()
 
@@ -367,17 +363,20 @@ class mainGame:
             for i in self.legendaries:
                 if i == self.random_pokemon_num:
                     keep_legendary = random.random()
-                    if keep_legendary <= 0.5:
+                    if keep_legendary >= 0.5:
                         self.random_pokemon_num = random.randint(0,493)
         else:
             self.random_pokemon_num = set_mon
-
         pkmn_y = ((self.random_pokemon_num*80)//2240)
+        if self.random_pokemon_num%28 == 0:
+            pkmn_y-=1
         pkmn_x = (self.random_pokemon_num-(28*(pkmn_y)))
+        print(pkmn_y,pkmn_x)
         if pkmn_x == 0:
             rect = pygame.Rect(pkmn_x*80,pkmn_y*80,80,80)
         else:
             rect = pygame.Rect((pkmn_x*80)-80,pkmn_y*80,80,80)
+        print(rect,"Rect")
         return rect
         
 
@@ -473,9 +472,15 @@ class mainGame:
             if self.text_state == 10:
                 self.fainted = False
                 self.dmg_once = False
-                self.random_move = random.randint(0,4)
+                self.pokemonai.supereffective()
+
+                if self.pokemonai.effective == 2:
+                    self.random_move = self.pokemonai.possible_moves[random.randint(0,len(self.pokemonai.possible_moves)-1)]
+                else:
+                    self.random_move = random.randint(1,4)
+                self.pokemonai.possible_moves.clear()
                 self.dawn_dmg = self.calc_damage(self.move,self.dawnPokemon,self.encountered_pokemon)
-                self.wild_dmg = self.calc_damage(self.move,self.encountered_pokemon,self.dawnPokemon)
+                self.wild_dmg = self.calc_damage(self.random_move,self.encountered_pokemon,self.dawnPokemon)
 
                 if self.dawnPokemon.speed >= self.encountered_pokemon.speed:
                     self.first_move = True
@@ -504,8 +509,9 @@ class mainGame:
         atk_pokemon = pokemon1
         def_pokemon = pokemon2
         level = atk_pokemon.level
+        effective = 0
 
-        if move_used == "Flamethrower":
+        if move_used == 1:
             if atk_pokemon.type1 == "Fire" or atk_pokemon.type2 == "Fire":
                 stab = 1.5
             else:
@@ -513,16 +519,20 @@ class mainGame:
 
             if def_pokemon.type1 == "Grass" or def_pokemon.type1 == "Ice" or def_pokemon.type1 == "Bug" or def_pokemon.type1 == "Steel":
                 type1_dmg = 2
+                effective = 2
 
             elif def_pokemon.type1 == "Fire" or def_pokemon.type1 == "Water" or def_pokemon.type1 == "Rock" or def_pokemon.type1 == "Dragon":
                 type1_dmg = 0.5
+                effective = 1
             else:
                 type1_dmg = 1
 
             if def_pokemon.type2 == "Grass" or def_pokemon.type2 == "Ice" or def_pokemon.type2 == "Bug" or def_pokemon.type2 == "Steel":
                 type2_dmg = 2
+                effective = 2
             elif def_pokemon.type2 == "Fire" or def_pokemon.type2 == "Water" or def_pokemon.type2 == "Rock" or def_pokemon.type2 == "Dragon":
                 type2_dmg = 0.5
+                effective = 1
             else:
                 type2_dmg = 1
 
@@ -547,10 +557,11 @@ class mainGame:
                 random_dmg = 93
             damage = (((((((2*level)/5)+2)*95*(atk_pokemon.spA/def_pokemon.spD))/50)+2)*(crit_dmg*random_dmg*stab*type1_dmg*type2_dmg)/100)
             int_damage = round(damage)
+            move_name = "Flamethrower"
             print(int_damage)
 
 
-        if move_used == "Hydro pump":
+        if move_used == 2:
             if atk_pokemon.type1 == "Water" or atk_pokemon.type2 == "Water":
                 stab = 1.5
             else:
@@ -558,15 +569,19 @@ class mainGame:
 
             if def_pokemon.type1 == "Fire" or def_pokemon.type1 == "Ground" or def_pokemon.type1 == "Rock":
                 type1_dmg = 2
+                effective = 2
             elif def_pokemon.type1 == "Water" or def_pokemon.type1 == "Grass" or def_pokemon.type1 == "Dragon":
                 type1_dmg = 0.5
+                effective = 1
             else:
                 type1_dmg = 1
 
             if def_pokemon.type2 == "Fire" or def_pokemon.type2 == "Ground" or def_pokemon.type2 == "Rock":
                 type2_dmg = 2
+                effective = 2
             elif def_pokemon.type2 == "Water" or def_pokemon.type2 == "Grass" or def_pokemon.type2 == "Dragon":
                 type2_dmg = 0.5
+                effective = 1
             else:
                 type2_dmg = 1
 
@@ -592,10 +607,11 @@ class mainGame:
 
             damage = (((((((2*level)/5)+2)*120*(atk_pokemon.spA/def_pokemon.spD))/50)+2)*(crit_dmg*random_dmg*stab*type1_dmg*type2_dmg)/100)
             int_damage = round(damage)
+            move_name = "Hydro pump"
             print(int_damage)
 
 
-        if move_used == "Thunderbolt":
+        if move_used == 3:
             if atk_pokemon.type1 == "Electric" or atk_pokemon.type2 == "Electric":
                 stab = 1.5
             else:
@@ -603,15 +619,19 @@ class mainGame:
 
             if def_pokemon.type1 == "Water" or def_pokemon.type1 == "Flying":
                 type1_dmg = 2
+                effective = 2
             elif def_pokemon.type1 == "Electric" or def_pokemon.type1 == "Grass" or def_pokemon.type1 == "Dragon":
                 type1_dmg = 0.5
+                effective = 1
             else:
                 type1_dmg = 1
 
             if def_pokemon.type2 == "Water" or def_pokemon.type2 == "Flying":
                 type2_dmg = 2
+                effective = 2
             elif def_pokemon.type2 == "Electric" or def_pokemon.type2 == "Grass" or def_pokemon.type2 == "Dragon":
                 type2_dmg = 0.5
+                effective = 1
             else:
                 type2_dmg = 1
 
@@ -637,9 +657,10 @@ class mainGame:
 
             damage = (((((((2*level)/5)+2)*95*(atk_pokemon.spA/def_pokemon.spD))/50)+2)*(crit_dmg*random_dmg*stab*type1_dmg*type2_dmg)/100)
             int_damage = round(damage)
+            move_name = "Thunderbolt"
             print(int_damage)
 
-        if move_used == "Hyper fang":
+        if move_used == 4:
             if atk_pokemon.type1 == "Normal" or atk_pokemon.type2 == "Normal":
                 stab = 1.5
             else:
@@ -647,11 +668,13 @@ class mainGame:
 
             if def_pokemon.type1 == "Rock" or def_pokemon.type1 == "Steel":
                 type1_dmg = 0.5
+                effective = 1
             else:
                 type1_dmg = 1
 
             if def_pokemon.type2 == "Rock" or def_pokemon.type2 == "Steel":
                 type2_dmg = 0.5
+                effective = 1
             else:
                 type2_dmg = 1
 
@@ -677,10 +700,11 @@ class mainGame:
 
             damage = (((((((2*level)/5)+2)*80*(atk_pokemon.atk/def_pokemon.defn))/50)+2)*(crit_dmg*random_dmg*stab*type1_dmg*type2_dmg)/100)
             int_damage = round(damage)
+            move_name = "Hyper fang"
             print(int_damage)
-        properties = [int_damage,crit]
+        properties = [int_damage,crit,move_name,effective]
         return properties
-
+    
     def start_screen(self):
         intro = True
         if pygame.mixer.get_init():
@@ -753,6 +777,9 @@ class mainGame:
 
                     if options_y.is_pressed(event.pos):
                         self.talk_trainer = False
+                        self.canEncounter = True
+                        self.encountered = True
+                        self.trainer_battle = True
 
                     if options_n.is_pressed(event.pos):
                         self.talk_trainer = False
