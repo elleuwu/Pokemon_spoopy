@@ -505,7 +505,7 @@ class pokemon_prop():
         self.speed_ev = 0
         self.evs = [self.hp_ev,self.atk_ev,self.def_ev,self.spA_ev,self.spD_ev,self.speed_ev]
 
-        self.level = 50
+        self.level = 15
         self.nature = self.mainGame.pkmn_natures(random.randint(1,25))
 
         self.hp = (((2*self.hp_base+self.hp_iv+(self.hp_ev//4))*self.level)//100)+self.level+10
@@ -638,6 +638,25 @@ class pokemon_prop():
         for i in range(len(self.stats)):
             self.stats[i] = round(self.stats[i])
         print(self.base,self.ivs,self.evs,self.stats)
+
+        with open("pokemon-data.csv",mode = "r") as move_file:
+            csv_reader = csv.reader(move_file,delimiter = ';')
+            for lines in csv_reader:
+                if lines[0].lower() == self.name.lower():
+                    moves = list(lines[11].split(","))
+                    self.move1 = moves[0]
+                    self.move2 = moves[1]
+                    self.move3 = moves[2]
+                    self.move4 = moves[3]
+                    self.all_moves = [self.move1,self.move2,self.move3,self.move4]
+        
+        for i in range(len(self.all_moves)):
+            pokemon_moves = open("move-data.csv","r")
+            move_reader = csv.reader(pokemon_moves)
+            for lines in move_reader:
+                if lines[1] == self.all_moves[i]:
+                    self.all_moves[i] = lines
+
 
 class Pokemon(pygame.sprite.Sprite,pokemon_prop):
     def __init__(self,mainGame,config,x,y,rect,num):

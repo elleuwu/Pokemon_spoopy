@@ -105,6 +105,8 @@ class mainGame:
                                             ("Mild",17),("Quiet",18),("Bashful",19),("Rash",20),("Calm",21),("Gentle",22),("Hardy",23),("Careful",24),
                                             ("Quirky",25)])
 
+        self.types = ["Normal","Fire","Fighting","Water","Flying","Grass","Poison","Electric","Ground","Psychic","Rock","Ice","Bug","Dragon","Ghost","Dark","Steel","Fairy"]
+
     def createMap(self):
         self.trainer_pos = []
         for i, row in enumerate(self.config.map):
@@ -201,7 +203,8 @@ class mainGame:
 
                         if self.move1.is_pressed(event.pos):
                             self.text_state = 10
-                            self.move = 1
+                            self.move = self.dawnPokemon.all_moves[0]
+                            print(self.move)
                         if self.move2.is_pressed(event.pos):
                             self.text_state = 10
                             self.move = 2
@@ -333,16 +336,16 @@ class mainGame:
             self.run = Button(self,1015,661,200,70,(0,0,0),(240,240,240),"Run","pokemon_pixel_font.ttf",70,False,2)
             self.runOutline = Button(self,1010,656,210,80,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
 
-            self.move1 = Button(self,15,581,365,65,(0,0,0),(240,240,240),"Flamethrower","pokemon_pixel_font.ttf",70,False,2)
+            self.move1 = Button(self,15,581,365,65,(0,0,0),(240,240,240),self.dawnPokemon.move1,"pokemon_pixel_font.ttf",70,False,2)
             self.move1_outline = Button(self,10,576,375,75,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
 
-            self.move2 = Button(self,395,581,365,65,(0,0,0),(240,240,240),"Hydro pump","pokemon_pixel_font.ttf",70,False,2)
+            self.move2 = Button(self,395,581,365,65,(0,0,0),(240,240,240),self.dawnPokemon.move2,"pokemon_pixel_font.ttf",70,False,2)
             self.move2_outline = Button(self,390,576,375,75,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
 
-            self.move3 = Button(self,15,661,365,65,(0,0,0),(240,240,240),"Thunderbolt","pokemon_pixel_font.ttf",70,False,2)
+            self.move3 = Button(self,15,661,365,65,(0,0,0),(240,240,240),self.dawnPokemon.move3,"pokemon_pixel_font.ttf",70,False,2)
             self.move3_outline = Button(self,10,656,375,75,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
 
-            self.move4 = Button(self,395,661,365,65,(0,0,0),(240,240,240),"Hyper fang","pokemon_pixel_font.ttf",70,False,2)
+            self.move4 = Button(self,395,661,365,65,(0,0,0),(240,240,240),self.dawnPokemon.move4,"pokemon_pixel_font.ttf",70,False,2)
             self.move4_outline = Button(self,390,656,375,75,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
 
             self.move_back = Button(self,800,550,410,175,(0,0,0),(240,240,240),"Back","pokemon_pixel_font.ttf",70,False,2,disable=True)
@@ -472,13 +475,14 @@ class mainGame:
             if self.text_state == 10:
                 self.fainted = False
                 self.dmg_once = False
-                self.pokemonai.supereffective()
+                #self.pokemonai.supereffective()
 
                 if self.pokemonai.effective == 2:
                     self.random_move = self.pokemonai.possible_moves[random.randint(0,len(self.pokemonai.possible_moves)-1)]
                 else:
-                    self.random_move = random.randint(1,4)
+                    self.random_move = self.encountered_pokemon.all_moves[random.randint(0,3)]
                 self.pokemonai.possible_moves.clear()
+
                 self.dawn_dmg = self.calc_damage(self.move,self.dawnPokemon,self.encountered_pokemon)
                 self.wild_dmg = self.calc_damage(self.random_move,self.encountered_pokemon,self.dawnPokemon)
 
@@ -509,18 +513,17 @@ class mainGame:
         atk_pokemon = pokemon1
         def_pokemon = pokemon2
         level = atk_pokemon.level
+
         effective = 0
-
-        if move_used == 1:
-            if atk_pokemon.type1 == "Fire" or atk_pokemon.type2 == "Fire":
-                stab = 1.5
-            else:
-                stab = 1
-
+        if move_used[2] == atk_pokemon.type1 or atk_pokemon.type2:
+            stab = 1.5
+        else:
+            stab = 1
+        
+        if move_used[2] == "Fire":
             if def_pokemon.type1 == "Grass" or def_pokemon.type1 == "Ice" or def_pokemon.type1 == "Bug" or def_pokemon.type1 == "Steel":
                 type1_dmg = 2
                 effective = 2
-
             elif def_pokemon.type1 == "Fire" or def_pokemon.type1 == "Water" or def_pokemon.type1 == "Rock" or def_pokemon.type1 == "Dragon":
                 type1_dmg = 0.5
                 effective = 1
@@ -536,172 +539,75 @@ class mainGame:
             else:
                 type2_dmg = 1
 
-            crit_hit = random.random()
-            if crit_hit <=0.12:
-                crit_dmg = 2
-                crit = True
-            else:
-                crit_dmg = 1
-                crit = False
-
-            random_hit = random.random()*100
-            if random_hit <=2.56:
-                random_dmg = 100
-            elif random_hit <=5.13:
-                dmg = [86,88,91,93,95,97,99]
-                random_dmg = dmg[random.randint(0,6)]
-            elif random_hit <= 7.69:
-                dmg = [85,87,89,90,92,94,96,98]
-                random_dmg = dmg[random.randint(0,7)]
-            else:
-                random_dmg = 93
-            damage = (((((((2*level)/5)+2)*95*(atk_pokemon.spA/def_pokemon.spD))/50)+2)*(crit_dmg*random_dmg*stab*type1_dmg*type2_dmg)/100)
-            int_damage = round(damage)
-            move_name = "Flamethrower"
-            print(int_damage)
-
-
-        if move_used == 2:
-            if atk_pokemon.type1 == "Water" or atk_pokemon.type2 == "Water":
-                stab = 1.5
-            else:
-                stab = 1
-
-            if def_pokemon.type1 == "Fire" or def_pokemon.type1 == "Ground" or def_pokemon.type1 == "Rock":
-                type1_dmg = 2
-                effective = 2
-            elif def_pokemon.type1 == "Water" or def_pokemon.type1 == "Grass" or def_pokemon.type1 == "Dragon":
-                type1_dmg = 0.5
-                effective = 1
-            else:
-                type1_dmg = 1
-
-            if def_pokemon.type2 == "Fire" or def_pokemon.type2 == "Ground" or def_pokemon.type2 == "Rock":
-                type2_dmg = 2
-                effective = 2
-            elif def_pokemon.type2 == "Water" or def_pokemon.type2 == "Grass" or def_pokemon.type2 == "Dragon":
-                type2_dmg = 0.5
-                effective = 1
-            else:
-                type2_dmg = 1
-
-            crit_hit = random.random()
-            if crit_hit <=0.12:
-                crit_dmg = 2
-                crit = True
-            else:
-                crit_dmg = 1
-                crit = False
-
-            random_hit = random.random()*100
-            if random_hit <=2.56:
-                random_dmg = 100
-            elif random_hit <=5.13:
-                dmg = [86,88,91,93,95,97,99]
-                random_dmg = dmg[random.randint(0,6)]
-            elif random_hit <= 7.69:
-                dmg = [85,87,89,90,92,94,96,98]
-                random_dmg = dmg[random.randint(0,7)]
-            else:
-                random_dmg = 93
-
-            damage = (((((((2*level)/5)+2)*120*(atk_pokemon.spA/def_pokemon.spD))/50)+2)*(crit_dmg*random_dmg*stab*type1_dmg*type2_dmg)/100)
-            int_damage = round(damage)
-            move_name = "Hydro pump"
-            print(int_damage)
-
-
-        if move_used == 3:
-            if atk_pokemon.type1 == "Electric" or atk_pokemon.type2 == "Electric":
-                stab = 1.5
-            else:
-                stab = 1
-
-            if def_pokemon.type1 == "Water" or def_pokemon.type1 == "Flying":
-                type1_dmg = 2
-                effective = 2
-            elif def_pokemon.type1 == "Electric" or def_pokemon.type1 == "Grass" or def_pokemon.type1 == "Dragon":
-                type1_dmg = 0.5
-                effective = 1
-            else:
-                type1_dmg = 1
-
-            if def_pokemon.type2 == "Water" or def_pokemon.type2 == "Flying":
-                type2_dmg = 2
-                effective = 2
-            elif def_pokemon.type2 == "Electric" or def_pokemon.type2 == "Grass" or def_pokemon.type2 == "Dragon":
-                type2_dmg = 0.5
-                effective = 1
-            else:
-                type2_dmg = 1
-
-            crit_hit = random.random()
-            if crit_hit <=0.12:
-                crit_dmg = 2
-                crit = True
-            else:
-                crit_dmg = 1
-                crit = False
-
-            random_hit = random.random()*100
-            if random_hit <=2.56:
-                random_dmg = 100
-            elif random_hit <=5.13:
-                dmg = [86,88,91,93,95,97,99]
-                random_dmg = dmg[random.randint(0,6)]
-            elif random_hit <= 7.69:
-                dmg = [85,87,89,90,92,94,96,98]
-                random_dmg = dmg[random.randint(0,7)]
-            else:
-                random_dmg = 93
-
-            damage = (((((((2*level)/5)+2)*95*(atk_pokemon.spA/def_pokemon.spD))/50)+2)*(crit_dmg*random_dmg*stab*type1_dmg*type2_dmg)/100)
-            int_damage = round(damage)
-            move_name = "Thunderbolt"
-            print(int_damage)
-
-        if move_used == 4:
-            if atk_pokemon.type1 == "Normal" or atk_pokemon.type2 == "Normal":
-                stab = 1.5
-            else:
-                stab = 1
-
+        elif move_used[2] == "Normal":
             if def_pokemon.type1 == "Rock" or def_pokemon.type1 == "Steel":
                 type1_dmg = 0.5
                 effective = 1
+            elif def_pokemon.type1 == "Ghost":
+                type1_dmg = 0
             else:
                 type1_dmg = 1
 
             if def_pokemon.type2 == "Rock" or def_pokemon.type2 == "Steel":
                 type2_dmg = 0.5
                 effective = 1
+            elif def_pokemon.type2 == "Ghost":
+                type2_dmg = 0
             else:
                 type2_dmg = 1
 
-            crit_hit = random.random()
-            if crit_hit <=0.12:
-                crit_dmg = 2
-                crit = True
+        elif move_used[2] == "Fighting":
+            if def_pokemon.type1 == "Normal" or def_pokemon.type1 == "Rock" or def_pokemon.type1 == "Steel" or def_pokemon.type1 == "Ice" or def_pokemon.type1 == "Dark":
+                type1_dmg = 2
+                effective = 2
+            elif def_pokemon.type1 == "Flying" or def_pokemon.type1 == "Poison" or def_pokemon.type1 == "Bug" or def_pokemon.type1 == "Psychic" or def_pokemon.type1 == "Fairy":
+                type1_dmg = 0.5
+                effective = 1
+            elif def_pokemon.type1 == "Ghost":
+                type1_dmg = 0
             else:
-                crit_dmg = 1
-                crit = False
+                type1_dmg = 1
 
-            random_hit = random.random()*100
-            if random_hit <=2.56:
-                random_dmg = 100
-            elif random_hit <=5.13:
-                dmg = [86,88,91,93,95,97,99]
-                random_dmg = dmg[random.randint(0,6)]
-            elif random_hit <= 7.69:
-                dmg = [85,87,89,90,92,94,96,98]
-                random_dmg = dmg[random.randint(0,7)]
+            if def_pokemon.type2 == "Normal" or def_pokemon.type2 == "Rock" or def_pokemon.type2 == "Steel" or def_pokemon.type2 == "Ice" or def_pokemon.type2 == "Dark":
+                type2_dmg = 2
+                effective = 2
+            elif def_pokemon.type2 == "Flying" or def_pokemon.type2 == "Poison" or def_pokemon.type2 == "Bug" or def_pokemon.type2 == "Psychic" or def_pokemon.type2 == "Fairy":
+                type2_dmg = 0.5
+                effective = 1
+            elif def_pokemon.type2 == "Ghost":
+                type2_dmg = 0
             else:
-                random_dmg = 93
+                type2_dmg = 1
 
-            damage = (((((((2*level)/5)+2)*80*(atk_pokemon.atk/def_pokemon.defn))/50)+2)*(crit_dmg*random_dmg*stab*type1_dmg*type2_dmg)/100)
-            int_damage = round(damage)
-            move_name = "Hyper fang"
-            print(int_damage)
+        crit_hit = random.random()
+        if crit_hit <=0.12:
+            crit_dmg = 2
+            crit = True
+        else:
+            crit_dmg = 1
+            crit = False
+
+        random_hit = random.random()*100
+        if random_hit <=2.56:
+            random_dmg = 100
+        elif random_hit <=5.13:
+            dmg = [86,88,91,93,95,97,99]
+            random_dmg = dmg[random.randint(0,6)]
+        elif random_hit <= 7.69:
+            dmg = [85,87,89,90,92,94,96,98]
+            random_dmg = dmg[random.randint(0,7)]
+        else:
+            random_dmg = 93
+
+        if move_used[3] == "Physical":
+            damage = (((((((2*level)/5)+2)*int(move_used[6])*(atk_pokemon.atk/def_pokemon.defn))/50)+2)*(crit_dmg*random_dmg*stab*type1_dmg*type2_dmg)/100)
+        elif move_used[3] == "Special":
+            damage = (((((((2*level)/5)+2)*int(move_used[6])*(atk_pokemon.spA/def_pokemon.spD))/50)+2)*(crit_dmg*random_dmg*stab*type1_dmg*type2_dmg)/100)
+        int_damage = round(damage)
+        move_name = move_used[1]
+        print(int_damage)
+
+
         properties = [int_damage,crit,move_name,effective]
         return properties
     
