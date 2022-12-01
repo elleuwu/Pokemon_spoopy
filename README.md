@@ -1,4 +1,4 @@
-# Pokemon_Fan_Demo
+# Pokemon Hollow Nexus
 A labour of love rising from the need to submit a project for comp science class
 # Installation
 No releases yet. Coming soon
