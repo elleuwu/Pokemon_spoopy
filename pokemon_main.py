@@ -207,13 +207,13 @@ class mainGame:
                             print(self.move)
                         if self.move2.is_pressed(event.pos):
                             self.text_state = 10
-                            self.move = 2
+                            self.move = self.dawnPokemon.all_moves[1]
                         if self.move3.is_pressed(event.pos):
                             self.text_state = 10
-                            self.move = 3
+                            self.move = self.dawnPokemon.all_moves[2]
                         if self.move4.is_pressed(event.pos):
                             self.text_state = 10
-                            self.move = 4
+                            self.move = self.dawnPokemon.all_moves[3]
 
                     if self.text_state == 11:
                         if self.mainText.is_pressed(event.pos):
@@ -579,6 +579,315 @@ class mainGame:
             else:
                 type2_dmg = 1
 
+        elif move_used[2] == "Water":
+            if def_pokemon.type1 == "Ground" or def_pokemon.type1 == "Rock" or def_pokemon.type1 == "Fire":
+                type1_dmg = 2
+                effective = 2
+            elif def_pokemon.type1 == "Water" or def_pokemon.type1 == "Grass" or def_pokemon.type1 == "Dragon":
+                type1_dmg = 0.5
+                effective = 1
+            else:
+                type1_dmg = 1
+
+            if def_pokemon.type2 == "Ground" or def_pokemon.type2 == "Rock" or def_pokemon.type2 == "Fire":
+                type2_dmg = 2
+                effective = 2
+            elif def_pokemon.type2 == "Water" or def_pokemon.type2 == "Grass" or def_pokemon.type2 == "Dragon":
+                type2_dmg = 0.5
+                effective = 1
+            else:
+                type2_dmg = 1
+
+        elif move_used[2] == "Flying":
+            if def_pokemon.type1 == "Fighting" or def_pokemon.type1 == "Bug" or def_pokemon.type1 == "Grass":
+                type1_dmg = 2
+                effective = 2
+            elif def_pokemon.type1 == "Rock" or def_pokemon.type1 == "Steel" or def_pokemon.type1 == "Electric":
+                type1_dmg = 0.5
+                effective = 1
+            else:
+                type1_dmg = 1
+
+            if def_pokemon.type2 == "Fighting" or def_pokemon.type2 == "Bug" or def_pokemon.type2 == "Grass":
+                type2_dmg = 2
+                effective = 2
+            elif def_pokemon.type2 == "Rock" or def_pokemon.type2 == "Steel" or def_pokemon.type2 == "Electric":
+                type2_dmg = 0.5
+                effective = 1
+            else:
+                type2_dmg = 1
+
+        elif move_used[2] == "Grass":
+            if def_pokemon.type1 == "Ground" or def_pokemon.type1 == "Rock" or def_pokemon.type1 == "Water":
+                type1_dmg = 2
+                effective = 2
+            elif def_pokemon.type1 == "Flying" or def_pokemon.type1 == "Poison" or def_pokemon.type1 == "Bug" or def_pokemon.type1 == "Steel" or def_pokemon.type1 == "Fire" or def_pokemon.type1 == "Grass" or def_pokemon.type1 == "Dragon":
+                type1_dmg = 0.5
+                effective = 1
+            else:
+                type1_dmg = 1
+
+            if def_pokemon.type2 == "Ground" or def_pokemon.type2 == "Rock" or def_pokemon.type2 == "Water":
+                type2_dmg = 2
+                effective = 2
+            elif def_pokemon.type2 == "Flying" or def_pokemon.type2 == "Poison" or def_pokemon.type2 == "Bug" or def_pokemon.type2 == "Steel" or def_pokemon.type2 == "Fire" or def_pokemon.type2 == "Grass" or def_pokemon.type2 == "Dragon":
+                type2_dmg = 0.5
+                effective = 1
+            else:
+                type2_dmg = 1
+
+        elif move_used[2] == "Poison":
+            if def_pokemon.type1 == "Grass" or def_pokemon.type1 == "Fairy":
+                type1_dmg = 2
+                effective = 2
+            elif def_pokemon.type1 == "Poison" or def_pokemon.type1 == "Ground" or def_pokemon.type1 == "Rock" or def_pokemon.type1 == "Ghost":
+                type1_dmg = 0.5
+                effective = 1
+            elif def_pokemon.type1 == "Steel":
+                type1_dmg = 0
+            else:
+                type1_dmg = 1
+
+            if def_pokemon.type2 == "Grass" or def_pokemon.type2 == "Fairy":
+                type2_dmg = 2
+                effective = 2
+            elif def_pokemon.type2 == "Poison" or def_pokemon.type2 == "Ground" or def_pokemon.type2 == "Rock" or def_pokemon.type2 == "Ghost":
+                type2_dmg = 0.5
+                effective = 1
+            elif def_pokemon.type2 == "Steel":
+                type2_dmg = 0
+            else:
+                type2_dmg = 1
+
+        elif move_used[2] == "Electric":
+            if def_pokemon.type1 == "Flying" or def_pokemon.type1 == "Water":
+                type1_dmg = 2
+                effective = 2
+            elif def_pokemon.type1 == "Grass" or def_pokemon.type1 == "Electric" or def_pokemon.type1 == "Dragon":
+                type1_dmg = 0.5
+                effective = 1
+            elif def_pokemon.type1 == "Ground":
+                type1_dmg = 0
+            else:
+                type1_dmg = 1
+
+            if def_pokemon.type2 == "Flying" or def_pokemon.type2 == "Water":
+                type2_dmg = 2
+                effective = 2
+            elif def_pokemon.type2 == "Grass" or def_pokemon.type2 == "Electric" or def_pokemon.type2 == "Dragon":
+                type2_dmg = 0.5
+                effective = 1
+            elif def_pokemon.type2 == "Ground":
+                type2_dmg = 0
+            else:
+                type2_dmg = 1
+
+        elif move_used[2] == "Ground":
+            if def_pokemon.type1 == "Poison" or def_pokemon.type1 == "Rock" or def_pokemon.type1 == "Steel" or def_pokemon.type1 == "Fire" or def_pokemon.type1 == "Electric":
+                type1_dmg = 2
+                effective = 2
+            elif def_pokemon.type1 == "Bug" or def_pokemon.type1 == "Grass":
+                type1_dmg = 0.5
+                effective = 1
+            elif def_pokemon.type1 == "Flying":
+                type1_dmg = 0
+            else:
+                type1_dmg = 1
+
+            if def_pokemon.type2 == "Poison" or def_pokemon.type2 == "Rock" or def_pokemon.type2 == "Steel" or def_pokemon.type2 == "Fire" or def_pokemon.type2 == "Electric":
+                type2_dmg = 2
+                effective = 2
+            elif def_pokemon.type2 == "Bug" or def_pokemon.type2 == "Grass":
+                type2_dmg = 0.5
+                effective = 1
+            elif def_pokemon.type2 == "Flying":
+                type2_dmg = 0
+            else:
+                type2_dmg = 1
+
+        elif move_used[2] == "Psychic":
+            if def_pokemon.type1 == "Fighting" or def_pokemon.type1 == "Poison":
+                type1_dmg = 2
+                effective = 2
+            elif def_pokemon.type1 == "Steel" or def_pokemon.type1 == "Psychic":
+                type1_dmg = 0.5
+                effective = 1
+            elif def_pokemon.type1 == "Dark":
+                type1_dmg = 0
+            else:
+                type1_dmg = 1
+
+            if def_pokemon.type2 == "Fighting" or def_pokemon.type2 == "Poison":
+                type2_dmg = 2
+                effective = 2
+            elif def_pokemon.type2 == "Steel" or def_pokemon.type2 == "Psychic":
+                type2_dmg = 0.5
+                effective = 1
+            elif def_pokemon.type2 == "Dark":
+                type2_dmg = 0
+            else:
+                type2_dmg = 1
+
+        elif move_used[2] == "Rock":
+            if def_pokemon.type1 == "Flying" or def_pokemon.type1 == "Bug" or def_pokemon.type1 == "Fire" or def_pokemon.type1 == "Ice":
+                type1_dmg = 2
+                effective = 2
+            elif def_pokemon.type1 == "Fighting" or def_pokemon.type1 == "Ground" or def_pokemon.type1 == "Steel":
+                type1_dmg = 0.5
+                effective = 1
+            else:
+                type1_dmg = 1
+
+            if def_pokemon.type2 == "Flying" or def_pokemon.type2 == "Bug" or def_pokemon.type2 == "Fire" or def_pokemon.type2 == "Ice":
+                type2_dmg = 2
+                effective = 2
+            elif def_pokemon.type2 == "Fighting" or def_pokemon.type2 == "Ground" or def_pokemon.type2 == "Steel":
+                type2_dmg = 0.5
+                effective = 1
+            else:
+                type2_dmg = 1
+
+        elif move_used[2] == "Ice":
+            if def_pokemon.type1 == "Flying" or def_pokemon.type1 == "Ground" or def_pokemon.type1 == "Grass" or def_pokemon.type1 == "Dragon":
+                type1_dmg = 2
+                effective = 2
+            elif def_pokemon.type1 == "Steel" or def_pokemon.type1 == "Fire" or def_pokemon.type1 == "Water" or def_pokemon.type1 == "Ice":
+                type1_dmg = 0.5
+                effective = 1
+            else:
+                type1_dmg = 1
+
+            if def_pokemon.type2 == "Flying" or def_pokemon.type2 == "Ground" or def_pokemon.type2 == "Grass" or def_pokemon.type2 == "Dragon":
+                type2_dmg = 2
+                effective = 2
+            elif def_pokemon.type2 == "Steel" or def_pokemon.type2 == "Fire" or def_pokemon.type2 == "Water" or def_pokemon.type2 == "Ice":
+                type2_dmg = 0.5
+                effective = 1
+            else:
+                type2_dmg = 1
+
+        elif move_used[2] == "Bug":
+            if def_pokemon.type1 == "Grass" or def_pokemon.type1 == "Psychic" or def_pokemon.type1 == "Dark":
+                type1_dmg = 2
+                effective = 2
+            elif def_pokemon.type1 == "Fighting" or def_pokemon.type1 == "Flying" or def_pokemon.type1 == "Poison" or def_pokemon.type1 == "Ghost" or def_pokemon.type1 == "Steel" or def_pokemon.type1 == "Fire" or def_pokemon.type1 == "Fairy":
+                type1_dmg = 0.5
+                effective = 1
+            else:
+                type1_dmg = 1
+
+            if def_pokemon.type2 == "Grass" or def_pokemon.type2 == "Psychic" or def_pokemon.type2 == "Dark":
+                type2_dmg = 2
+                effective = 2
+            elif def_pokemon.type2 == "Fighting" or def_pokemon.type2 == "Flying" or def_pokemon.type2 == "Poison" or def_pokemon.type2 == "Ghost" or def_pokemon.type2 == "Steel" or def_pokemon.type2 == "Fire" or def_pokemon.type2 == "Fairy":
+                type2_dmg = 0.5
+                effective = 1
+            else:
+                type2_dmg = 1
+
+        elif move_used[2] == "Dragon":
+            if def_pokemon.type1 == "Dragon":
+                type1_dmg = 2
+                effective = 2
+            elif def_pokemon.type1 == "Steel":
+                type1_dmg = 0.5
+                effective = 1
+            elif def_pokemon.type1 == "Fairy":
+                type1_dmg = 0
+            else:
+                type1_dmg = 1
+
+            if def_pokemon.type2 == "Dragon":
+                type2_dmg = 2
+                effective = 2
+            elif def_pokemon.type2 == "Steel":
+                type2_dmg = 0.5
+                effective = 1
+            elif def_pokemon.type2 == "Fairy":
+                type2_dmg = 0
+            else:
+                type2_dmg = 1
+
+        elif move_used[2] == "Ghost":
+            if def_pokemon.type1 == "Ghost" or def_pokemon.type1 == "Psychic":
+                type1_dmg = 2
+                effective = 2
+            elif def_pokemon.type1 == "Dark":
+                type1_dmg = 0.5
+                effective = 1
+            elif def_pokemon.type1 == "Normal":
+                type1_dmg = 0
+            else:
+                type1_dmg = 1
+
+            if def_pokemon.type2 == "Ghost" or def_pokemon.type2 == "Psychic":
+                type2_dmg = 2
+                effective = 2
+            elif def_pokemon.type2 == "Dark":
+                type2_dmg = 0.5
+                effective = 1
+            elif def_pokemon.type2 == "Normal":
+                type2_dmg = 0
+            else:
+                type2_dmg = 1
+
+        elif move_used[2] == "Dark":
+            if def_pokemon.type1 == "Ghost" or def_pokemon.type1 == "Psychic":
+                type1_dmg = 2
+                effective = 2
+            elif def_pokemon.type1 == "Fighting" or def_pokemon.type1 == "Dark" or def_pokemon.type1 == "Fairy":
+                type1_dmg = 0.5
+                effective = 1
+            else:
+                type1_dmg = 1
+
+            if def_pokemon.type2 == "Ghost" or def_pokemon.type2 == "Psychic":
+                type2_dmg = 2
+                effective = 2
+            elif def_pokemon.type2 == "Fighting" or def_pokemon.type2 == "Dark" or def_pokemon.type2 == "Fairy":
+                type2_dmg = 0.5
+                effective = 1
+            else:
+                type2_dmg = 1
+
+        elif move_used[2] == "Steel":
+            if def_pokemon.type1 == "Rock" or def_pokemon.type1 == "Ice" or def_pokemon.type1 == "Fairy":
+                type1_dmg = 2
+                effective = 2
+            elif def_pokemon.type1 == "Steel" or def_pokemon.type1 == "Fire" or def_pokemon.type1 == "Water" or def_pokemon.type1 == "Electric":
+                type1_dmg = 0.5
+                effective = 1
+            else:
+                type1_dmg = 1
+
+            if def_pokemon.type2 == "Rock" or def_pokemon.type2 == "Ice" or def_pokemon.type2 == "Fairy":
+                type2_dmg = 2
+                effective = 2
+            elif def_pokemon.type2 == "Steel" or def_pokemon.type2 == "Fire" or def_pokemon.type2 == "Water" or def_pokemon.type2 == "Electric":
+                type2_dmg = 0.5
+                effective = 1
+            else:
+                type2_dmg = 1
+
+        elif move_used[2] == "Fairy":
+            if def_pokemon.type1 == "Fighting" or def_pokemon.type1 == "Dragon" or def_pokemon.type1 == "Dark":
+                type1_dmg = 2
+                effective = 2
+            elif def_pokemon.type1 == "Poison" or def_pokemon.type1 == "Steel" or def_pokemon.type1 == "Fire":
+                type1_dmg = 0.5
+                effective = 1
+            else:
+                type1_dmg = 1
+
+            if def_pokemon.type2 == "Fighting" or def_pokemon.type2 == "Dragon" or def_pokemon.type2 == "Dark":
+                type2_dmg = 2
+                effective = 2
+            elif def_pokemon.type2 == "Poison" or def_pokemon.type2 == "Steel" or def_pokemon.type2 == "Fire":
+                type2_dmg = 0.5
+                effective = 1
+            else:
+                type2_dmg = 1
+
         crit_hit = random.random()
         if crit_hit <=0.12:
             crit_dmg = 2
@@ -603,6 +912,8 @@ class mainGame:
             damage = (((((((2*level)/5)+2)*int(move_used[6])*(atk_pokemon.atk/def_pokemon.defn))/50)+2)*(crit_dmg*random_dmg*stab*type1_dmg*type2_dmg)/100)
         elif move_used[3] == "Special":
             damage = (((((((2*level)/5)+2)*int(move_used[6])*(atk_pokemon.spA/def_pokemon.spD))/50)+2)*(crit_dmg*random_dmg*stab*type1_dmg*type2_dmg)/100)
+        elif move_used[3] == "Status":
+            damage = 1
         int_damage = round(damage)
         move_name = move_used[1]
         print(int_damage)
