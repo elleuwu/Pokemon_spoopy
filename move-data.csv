@@ -1,4 +1,4 @@
-Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
+Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation,Effect
 1,Pound,Normal,Physical,Tough,35,40,100,1
 2,Karate Chop,Fighting,Physical,Tough,25,50,100,1
 3,Double Slap,Normal,Physical,Cute,10,15,85,1
@@ -10,13 +10,13 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
 9,Thunder Punch,Electric,Physical,Cool,15,75,100,1
 10,Scratch,Normal,Physical,Tough,35,40,100,1
 11,Vice Grip,Normal,Physical,Tough,30,55,100,1
-12,Guillotine,Normal,Physical,Cool,5,60,60,1
+12,Guillotine,Normal,Physical,Cool,5,999,30,1
 13,Razor Wind,Normal,Special,Cool,10,80,60,1
-14,Swords Dance,Normal,Status,Beautiful,20,60,60,1
+14,Swords Dance,Normal,Status,Beautiful,20,0,100,1,atk+2
 15,Cut,Normal,Physical,Cool,30,50,95,1
 16,Gust,Flying,Special,Clever,35,40,100,1
 17,Wing Attack,Flying,Physical,Cool,35,60,100,1
-18,Whirlwind,Normal,Status,Clever,20,60,60,1
+18,Whirlwind,Normal,Status,Clever,20,0,100,1,switch
 19,Fly,Flying,Physical,Clever,15,90,95,1
 20,Bind,Normal,Physical,Tough,20,15,60,1
 21,Slam,Normal,Physical,Tough,20,80,75,1
@@ -26,26 +26,26 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
 25,Mega Kick,Normal,Physical,Cool,5,120,75,1
 26,Jump Kick,Fighting,Physical,Cool,10,100,95,1
 27,Rolling Kick,Fighting,Physical,Cool,15,60,85,1
-28,Sand Attack,Ground,Status,Cute,15,60,100,1
+28,Sand Attack,Ground,Status,Cute,15,0,100,1,acc1
 29,Headbutt,Normal,Physical,Tough,15,70,100,1
 30,Horn Attack,Normal,Physical,Cool,25,65,100,1
 31,Fury Attack,Normal,Physical,Cool,20,15,85,1
-32,Horn Drill,Normal,Physical,Cool,5,60,60,1
+32,Horn Drill,Normal,Physical,Cool,5,999,30,1
 33,Tackle,Normal,Physical,Tough,35,40,60,1
 34,Body Slam,Normal,Physical,Tough,15,85,100,1
 35,Wrap,Normal,Physical,Tough,20,15,60,1
 36,Take Down,Normal,Physical,Tough,20,90,85,1
 37,Thrash,Normal,Physical,Tough,10,120,100,1
-38,Double-Edge,Normal,Physical,Tough,15,120,100,1
-39,Tail Whip,Normal,Status,Cute,30,60,100,1
+38,DoubleEdge,Normal,Physical,Tough,15,120,100,1
+39,Tail Whip,Normal,Status,Cute,30,0,100,1,defn1
 40,Poison Sting,Poison,Physical,Clever,35,15,100,1
 41,Twineedle,Bug,Physical,Cool,20,25,100,1
 42,Pin Missile,Bug,Physical,Cool,20,25,60,1
-43,Leer,Normal,Status,Cool,30,60,100,1
+43,Leer,Normal,Status,Cool,30,0,100,1,defn1
 44,Bite,Dark,Physical,Tough,25,60,100,1
-45,Growl,Normal,Status,Cute,40,60,100,1
-46,Roar,Normal,Status,Cool,20,60,60,1
-47,Sing,Normal,Status,Cute,15,60,55,1
+45,Growl,Normal,Status,Cute,40,0,100,1,atk+1
+46,Roar,Normal,Status,Cool,20,0,100,1,eb
+47,Sing,Normal,Status,Cute,15,0,55,1,#HEREHEREHEREHEREHEREHEREHERE
 48,Supersonic,Normal,Status,Clever,20,60,55,1
 49,Sonic Boom,Normal,Special,Cool,20,60,90,1
 50,Disable,Normal,Status,Clever,20,60,60,1
@@ -118,7 +118,7 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
 117,Bide,Normal,Physical,Tough,10,60,60,1
 118,Metronome,Normal,Status,Cute,10,60,60,1
 119,Mirror Move,Flying,Status,Clever,20,60,60,1
-120,Self-Destruct,Normal,Physical,Beautiful,5,200,100,1
+120,SelfDestruct,Normal,Physical,Beautiful,5,200,100,1
 121,Egg Bomb,Normal,Physical,Cute,10,100,75,1
 122,Lick,Ghost,Physical,Cute,30,30,100,1
 123,Smog,Poison,Special,Tough,20,30,70,1
@@ -133,7 +133,7 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
 132,Constrict,Normal,Physical,Tough,35,10,100,1
 133,Amnesia,Psychic,Status,Cute,20,60,60,1
 134,Kinesis,Psychic,Status,Clever,15,60,80,1
-135,Soft-Boiled,Normal,Status,Cute,10,60,60,1
+135,SoftBoiled,Normal,Status,Cute,10,60,60,1
 136,High Jump Kick,Fighting,Physical,Cool,10,130,90,1
 137,Glare,Normal,Status,Tough,30,60,60,1
 138,Dream Eater,Psychic,Special,Clever,15,100,100,1
@@ -187,7 +187,7 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
 186,Sweet Kiss,Fairy,Status,Cute,10,60,75,2
 187,Belly Drum,Normal,Status,Cute,10,60,60,2
 188,Sludge Bomb,Poison,Special,Tough,10,90,100,2
-189,Mud-Slap,Ground,Special,Cute,10,20,100,2
+189,MudSlap,Ground,Special,Cute,10,20,100,2
 190,Octazooka,Water,Special,Tough,10,65,85,2
 191,Spikes,Ground,Status,Clever,20,60,60,2
 192,Zap Cannon,Electric,Special,Cool,5,120,50,2
@@ -197,7 +197,7 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
 196,Icy Wind,Ice,Special,Beautiful,15,55,95,2
 197,Detect,Fighting,Status,Cool,5,60,60,2
 198,Bone Rush,Ground,Physical,Tough,10,25,60,2
-199,Lock-On,Normal,Status,Clever,5,60,60,2
+199,LockOn,Normal,Status,Clever,5,60,60,2
 200,Outrage,Dragon,Physical,Cool,10,120,100,2
 201,Sandstorm,Rock,Status,Tough,10,60,60,2
 202,Giga Drain,Grass,Special,Clever,10,75,100,2
@@ -259,7 +259,7 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
 258,Hail,Ice,Status,Beautiful,10,60,60,3
 259,Torment,Dark,Status,Tough,15,60,100,3
 260,Flatter,Dark,Status,Clever,15,60,100,3
-261,Will-O-Wisp,Fire,Status,Beautiful,15,60,60,3
+261,WillOWisp,Fire,Status,Beautiful,15,60,60,3
 262,Memento,Dark,Status,Tough,10,60,100,3
 263,Facade,Normal,Physical,Cute,20,70,100,3
 264,Focus Punch,Fighting,Physical,Tough,20,150,100,3
@@ -356,7 +356,7 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
 355,Roost,Flying,Status,Clever,10,60,60,4
 356,Gravity,Psychic,Status,Clever,5,60,60,4
 357,Miracle Eye,Psychic,Status,Clever,40,60,60,4
-358,Wake-Up Slap,Fighting,Physical,Tough,10,70,100,4
+358,WakeUp Slap,Fighting,Physical,Tough,10,70,100,4
 359,Hammer Arm,Fighting,Physical,Tough,10,100,90,4
 360,Gyro Ball,Steel,Physical,Cool,5,60,100,4
 361,Healing Wish,Psychic,Status,Beautiful,10,60,60,4
@@ -367,7 +367,7 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
 366,Tailwind,Flying,Status,Cool,15,60,60,4
 367,Acupressure,Normal,Status,Tough,30,60,60,4
 368,Metal Burst,Steel,Physical,Cool,10,60,100,4
-369,U-turn,Bug,Physical,Cute,20,70,100,4
+369,Uturn,Bug,Physical,Cute,20,70,100,4
 370,Close Combat,Fighting,Physical,Tough,5,120,100,4
 371,Payback,Dark,Physical,Tough,10,50,100,4
 372,Assurance,Dark,Physical,Clever,10,60,100,4
@@ -402,7 +402,7 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
 401,Aqua Tail,Water,Physical,Beautiful,10,90,90,4
 402,Seed Bomb,Grass,Physical,Tough,15,80,100,4
 403,Air Slash,Flying,Special,Cool,15,75,95,4
-404,X-Scissor,Bug,Physical,Cool,15,80,100,4
+404,XScissor,Bug,Physical,Cool,15,80,100,4
 405,Bug Buzz,Bug,Special,Beautiful,10,90,100,4
 406,Dragon Pulse,Dragon,Special,Beautiful,10,85,100,4
 407,Dragon Rush,Dragon,Physical,Tough,10,100,75,4
@@ -555,7 +555,7 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
 554,Ice Burn,Ice,Special,Beautiful,5,140,90,5
 555,Snarl,Dark,Special,Tough,15,55,95,5
 556,Icicle Crash,Ice,Physical,Beautiful,10,85,90,5
-557,V-create,Fire,Physical,Cool,5,180,95,5
+557,Vcreate,Fire,Physical,Cool,5,180,95,5
 558,Fusion Flare,Fire,Special,Beautiful,5,100,100,5
 559,Fusion Bolt,Electric,Physical,Cool,5,100,100,5
 560,Flying Press,Fighting,Physical,Tough,10,100,95,6
@@ -565,16 +565,16 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
 564,Sticky Web,Bug,Status,Tough,20,60,60,6
 565,Fell Stinger,Bug,Physical,Cool,25,50,100,6
 566,Phantom Force,Ghost,Physical,Cool,10,90,100,6
-567,Trick-or-Treat,Ghost,Status,Cute,20,60,100,6
+567,TrickorTreat,Ghost,Status,Cute,20,60,100,6
 568,Noble Roar,Normal,Status,Tough,30,60,100,6
 569,Ion Deluge,Electric,Status,Beautiful,25,60,60,6
 570,Parabolic Charge,Electric,Special,Clever,20,65,100,6
 571,Forest's Curse,Grass,Status,Clever,20,60,100,6
 572,Petal Blizzard,Grass,Physical,Beautiful,15,90,100,6
-573,Freeze-Dry,Ice,Special,Beautiful,20,70,100,6
+573,FreezeDry,Ice,Special,Beautiful,20,70,100,6
 574,Disarming Voice,Fairy,Special,Cute,15,40,60,6
 575,Parting Shot,Dark,Status,Cool,20,60,100,6
-576,Topsy-Turvy,Dark,Status,Clever,20,60,60,6
+576,TopsyTurvy,Dark,Status,Clever,20,60,60,6
 577,Draining Kiss,Fairy,Special,Cute,10,50,100,6
 578,Crafty Shield,Fairy,Status,Clever,10,60,60,6
 579,Flower Shield,Fairy,Status,Beautiful,10,60,60,6
@@ -606,11 +606,11 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
 605,Dazzling Gleam,Fairy,Special,Beautiful,10,80,100,6
 606,Celebrate,Normal,Status,Cute,40,60,60,6
 607,Hold Hands,Normal,Status,Cute,40,60,60,6
-608,Baby-Doll Eyes,Fairy,Status,Cute,30,60,100,6
+608,BabyDoll Eyes,Fairy,Status,Cute,30,60,100,6
 609,Nuzzle,Electric,Physical,Cute,20,20,100,6
 610,Hold Back,Normal,Physical,Cool,40,40,100,6
 611,Infestation,Bug,Special,Cute,20,20,100,6
-612,Power-Up Punch,Fighting,Physical,Tough,20,40,100,6
+612,PowerUp Punch,Fighting,Physical,Tough,20,40,100,6
 613,Oblivion Wing,Flying,Special,Cool,10,80,100,6
 614,Thousand Arrows,Ground,Physical,Beautiful,10,90,100,6
 615,Thousand Waves,Ground,Physical,Tough,10,90,100,6
@@ -622,8 +622,8 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
 621,Hyperspace Fury,Dark,Physical,Tough,5,100,60,6
 622,Breakneck Blitz,Normal,Physical,???,1,60,60,7
 623,Breakneck Blitz,Normal,Special,???,1,60,60,7
-624,All-Out Pummeling,Fighting,Physical,???,1,60,60,7
-625,All-Out Pummeling,Fighting,Special,???,1,60,60,7
+624,AllOut Pummeling,Fighting,Physical,???,1,60,60,7
+625,AllOut Pummeling,Fighting,Special,???,1,60,60,7
 626,Supersonic Skystrike,Flying,Physical,???,1,60,60,7
 627,Supersonic Skystrike,Flying,Special,???,1,60,60,7
 628,Acid Downpour,Poison,Physical,???,1,60,60,7
@@ -632,10 +632,10 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
 631,Tectonic Rage,Ground,Special,???,1,60,60,7
 632,Continental Crush,Rock,Physical,???,1,60,60,7
 633,Continental Crush,Rock,Special,???,1,60,60,7
-634,Savage Spin-Out,Bug,Physical,???,1,60,60,7
-635,Savage Spin-Out,Bug,Special,???,1,60,60,7
-636,Never-Ending Nightmare,Ghost,Physical,???,1,60,60,7
-637,Never-Ending Nightmare,Ghost,Special,???,1,60,60,7
+634,Savage SpinOut,Bug,Physical,???,1,60,60,7
+635,Savage SpinOut,Bug,Special,???,1,60,60,7
+636,NeverEnding Nightmare,Ghost,Physical,???,1,60,60,7
+637,NeverEnding Nightmare,Ghost,Special,???,1,60,60,7
 638,Corkscrew Crash,Steel,Physical,???,1,60,60,7
 639,Corkscrew Crash,Steel,Special,???,1,60,60,7
 640,Inferno Overdrive,Fire,Physical,???,1,60,60,7
@@ -697,7 +697,7 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
 696,Malicious Moonsault,Dark,Physical,???,1,180,60,7
 697,Oceanic Operetta,Water,Special,???,1,195,60,7
 698,Guardian of Alola,Fairy,Special,???,1,60,60,7
-699,Soul-Stealing 7-Star Strike,Ghost,Physical,???,1,195,60,7
+699,SoulStealing 7Star Strike,Ghost,Physical,???,1,195,60,7
 700,Stoked Sparksurfer,Electric,Special,???,1,175,60,7
 701,Pulverizing Pancake,Normal,Physical,???,1,210,60,7
 702,Extreme Evoboost,Normal,Status,???,1,60,60,7
@@ -716,7 +716,7 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
 715,Tearful Look,Normal,Status,???,20,60,60,7
 716,Zing Zap,Electric,Physical,???,10,80,100,7
 717,Nature's Madness,Fairy,Special,???,10,60,90,7
-718,Multi-Attack,Normal,Physical,???,10,90,100,7
+718,MultiAttack,Normal,Physical,???,10,90,100,7
 719,"10,000,000 Volt Thunderbolt",Electric,Special,???,1,195,60,7
 720,Mind Blown,Fire,Special,???,5,150,100,7
 721,Plasma Fists,Electric,Physical,???,15,100,100,7

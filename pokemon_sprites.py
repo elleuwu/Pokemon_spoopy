@@ -649,7 +649,7 @@ class pokemon_prop():
                     self.move3 = moves[2]
                     self.move4 = moves[3]
                     self.all_moves = [self.move1,self.move2,self.move3,self.move4]
-        
+        print(self.all_moves)
         for i in range(len(self.all_moves)):
             pokemon_moves = open("move-data.csv","r")
             move_reader = csv.reader(pokemon_moves)
@@ -853,20 +853,18 @@ class pokemonAI():
         self.possible_moves = []
 
     def supereffective(self):
-        if self.mainGame.calc_damage(1,self.pokemon,self.target)[3] == 2:
+        if self.mainGame.calc_damage(self.pokemon.all_moves[0],self.pokemon,self.target)[3] == 2:
             self.effective = 2
-            self.possible_moves.append(1)
-        if self.mainGame.calc_damage(2,self.pokemon,self.target)[3] == 2:
+            self.possible_moves.append(self.pokemon.all_moves[0])
+        if self.mainGame.calc_damage(self.pokemon.all_moves[1],self.pokemon,self.target)[3] == 2:
             self.effective = 2
-            self.possible_moves.append(2)
-        if self.mainGame.calc_damage(3,self.pokemon,self.target)[3] == 2:
+            self.possible_moves.append(self.pokemon.all_moves[1])
+        if self.mainGame.calc_damage(self.pokemon.all_moves[2],self.pokemon,self.target)[3] == 2:
             self.effective = 2
-            self.possible_moves.append(3)
-        if self.mainGame.calc_damage(4,self.pokemon,self.target)[3] == 2:
+            self.possible_moves.append(self.pokemon.all_moves[2])
+        if self.mainGame.calc_damage(self.pokemon.all_moves[3],self.pokemon,self.target)[3] == 2:
             self.effective = 2
-            self.possible_moves.append(3)
-        print(self.possible_moves)
-
+            self.possible_moves.append(self.pokemon.all_moves[3])
 
 
 

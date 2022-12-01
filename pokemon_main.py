@@ -204,7 +204,6 @@ class mainGame:
                         if self.move1.is_pressed(event.pos):
                             self.text_state = 10
                             self.move = self.dawnPokemon.all_moves[0]
-                            print(self.move)
                         if self.move2.is_pressed(event.pos):
                             self.text_state = 10
                             self.move = self.dawnPokemon.all_moves[1]
@@ -321,8 +320,8 @@ class mainGame:
             self.mainTextOutline = Button(self,10,576,760,160,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
 
             self.dawn = DawnThrowPokemon(self,self.config,0,13)
-            self.player_pokemon = self.random_pokemon(250,False)
-            self.dawnPokemon = DawnPokemon(self,self.config,2,9,self.player_pokemon,250)
+            self.player_pokemon = self.random_pokemon()
+            self.dawnPokemon = DawnPokemon(self,self.config,2,10,self.player_pokemon,self.random_pokemon_num)
 
             self.fight = Button(self,800,576,200,70,(0,0,0),(240,240,240),"Fight","pokemon_pixel_font.ttf",70,False,2)
             self.fightOutline = Button(self,795,571,210,80,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
@@ -374,12 +373,10 @@ class mainGame:
         if self.random_pokemon_num%28 == 0:
             pkmn_y-=1
         pkmn_x = (self.random_pokemon_num-(28*(pkmn_y)))
-        print(pkmn_y,pkmn_x)
         if pkmn_x == 0:
             rect = pygame.Rect(pkmn_x*80,pkmn_y*80,80,80)
         else:
             rect = pygame.Rect((pkmn_x*80)-80,pkmn_y*80,80,80)
-        print(rect,"Rect")
         return rect
         
 
@@ -475,14 +472,15 @@ class mainGame:
             if self.text_state == 10:
                 self.fainted = False
                 self.dmg_once = False
-                #self.pokemonai.supereffective()
+                self.pokemonai.supereffective()
 
                 if self.pokemonai.effective == 2:
                     self.random_move = self.pokemonai.possible_moves[random.randint(0,len(self.pokemonai.possible_moves)-1)]
                 else:
                     self.random_move = self.encountered_pokemon.all_moves[random.randint(0,3)]
-                self.pokemonai.possible_moves.clear()
 
+                self.pokemonai.possible_moves.clear()
+                print(self.move,self.random_move)
                 self.dawn_dmg = self.calc_damage(self.move,self.dawnPokemon,self.encountered_pokemon)
                 self.wild_dmg = self.calc_damage(self.random_move,self.encountered_pokemon,self.dawnPokemon)
 
@@ -513,7 +511,6 @@ class mainGame:
         atk_pokemon = pokemon1
         def_pokemon = pokemon2
         level = atk_pokemon.level
-
         effective = 0
         if move_used[2] == atk_pokemon.type1 or atk_pokemon.type2:
             stab = 1.5
