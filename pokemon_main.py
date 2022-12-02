@@ -305,7 +305,7 @@ class mainGame:
 
 
     def wild_battle(self):
-        if self.random_encounter_chance <= 0.9 and self.random_encounter_chance>0:
+        if self.random_encounter_chance <= 0.11 and self.random_encounter_chance>0:
             self.encountered = True
 
         if self.encountered == True:
