@@ -470,6 +470,7 @@ class pokemon_prop():
         self.mainGame = mainGame
         self.config = config
         self.pokemon_to_load = pokemon_num
+        self.all_moves = []
 
         names = open("pokemon-properties.csv")
         reader = csv.reader(names)
@@ -644,11 +645,13 @@ class pokemon_prop():
             for lines in csv_reader:
                 if lines[0].lower() == self.name.lower():
                     moves = list(lines[11].split(","))
-                    self.move1 = moves[0]
-                    self.move2 = moves[1]
-                    self.move3 = moves[2]
-                    self.move4 = moves[3]
-                    self.all_moves = [self.move1,self.move2,self.move3,self.move4]
+                    for i in range(len(moves)):
+                        if i>3:
+                            break
+                        else:
+                            self.all_moves.append(moves[i])
+
+        print(self.name)
         print(self.all_moves)
         for i in range(len(self.all_moves)):
             pokemon_moves = open("move-data.csv","r")
@@ -853,18 +856,10 @@ class pokemonAI():
         self.possible_moves = []
 
     def supereffective(self):
-        if self.mainGame.calc_damage(self.pokemon.all_moves[0],self.pokemon,self.target)[3] == 2:
-            self.effective = 2
-            self.possible_moves.append(self.pokemon.all_moves[0])
-        if self.mainGame.calc_damage(self.pokemon.all_moves[1],self.pokemon,self.target)[3] == 2:
-            self.effective = 2
-            self.possible_moves.append(self.pokemon.all_moves[1])
-        if self.mainGame.calc_damage(self.pokemon.all_moves[2],self.pokemon,self.target)[3] == 2:
-            self.effective = 2
-            self.possible_moves.append(self.pokemon.all_moves[2])
-        if self.mainGame.calc_damage(self.pokemon.all_moves[3],self.pokemon,self.target)[3] == 2:
-            self.effective = 2
-            self.possible_moves.append(self.pokemon.all_moves[3])
+        for i in range(len(self.pokemon.all_moves)):
+            if self.mainGame.calc_damage(self.pokemon.all_moves[i],self.pokemon,self.target)[3] == 2:
+                self.effective = 2
+                self.possible_moves.append(self.pokemon.all_moves[i])
 
 
 

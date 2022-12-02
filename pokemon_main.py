@@ -201,16 +201,16 @@ class mainGame:
                                 self.text_state = 5
                                 self.move_back.disable = True
 
-                        if self.move1.is_pressed(event.pos):
+                        if self.all_moves[0].is_pressed(event.pos):
                             self.text_state = 10
                             self.move = self.dawnPokemon.all_moves[0]
-                        if self.move2.is_pressed(event.pos):
+                        if self.all_moves[1].is_pressed(event.pos):
                             self.text_state = 10
                             self.move = self.dawnPokemon.all_moves[1]
-                        if self.move3.is_pressed(event.pos):
+                        if self.all_moves[2].is_pressed(event.pos):
                             self.text_state = 10
                             self.move = self.dawnPokemon.all_moves[2]
-                        if self.move4.is_pressed(event.pos):
+                        if self.all_moves[3].is_pressed(event.pos):
                             self.text_state = 10
                             self.move = self.dawnPokemon.all_moves[3]
 
@@ -305,7 +305,7 @@ class mainGame:
 
 
     def wild_battle(self):
-        if self.random_encounter_chance <= 0.11 and self.random_encounter_chance>0:
+        if self.random_encounter_chance <= 0.9 and self.random_encounter_chance>0:
             self.encountered = True
 
         if self.encountered == True:
@@ -315,6 +315,10 @@ class mainGame:
             self.in_battle = True
             self.turn = 0
             self.encounter_anim = True
+            self.all_moves = []
+            self.move_button_pos = [[15,581,365,65],[395,581,365,65],[15,661,365,65],[395,661,365,65]]
+            self.all_moves_outline = []
+            self.move_outline_pos = [[10,576,375,75],[390,576,375,75],[10,656,375,75],[390,656,375,75]]
 
             self.mainText = Button(self,15,581,750,150,(0,0,0),(230,230,230),"","pokemon_pixel_font.ttf",70,False,2,disable=True)
             self.mainTextOutline = Button(self,10,576,760,160,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
@@ -335,17 +339,9 @@ class mainGame:
             self.run = Button(self,1015,661,200,70,(0,0,0),(240,240,240),"Run","pokemon_pixel_font.ttf",70,False,2)
             self.runOutline = Button(self,1010,656,210,80,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
 
-            self.move1 = Button(self,15,581,365,65,(0,0,0),(240,240,240),self.dawnPokemon.move1,"pokemon_pixel_font.ttf",70,False,2)
-            self.move1_outline = Button(self,10,576,375,75,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
-
-            self.move2 = Button(self,395,581,365,65,(0,0,0),(240,240,240),self.dawnPokemon.move2,"pokemon_pixel_font.ttf",70,False,2)
-            self.move2_outline = Button(self,390,576,375,75,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
-
-            self.move3 = Button(self,15,661,365,65,(0,0,0),(240,240,240),self.dawnPokemon.move3,"pokemon_pixel_font.ttf",70,False,2)
-            self.move3_outline = Button(self,10,656,375,75,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
-
-            self.move4 = Button(self,395,661,365,65,(0,0,0),(240,240,240),self.dawnPokemon.move4,"pokemon_pixel_font.ttf",70,False,2)
-            self.move4_outline = Button(self,390,656,375,75,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2)
+            for i in range(len(self.dawnPokemon.all_moves)):
+                self.all_moves.append(Button(self,self.move_button_pos[i][0],self.move_button_pos[i][1],self.move_button_pos[i][2],self.move_button_pos[i][3],(0,0,0),(240,240,240),self.dawnPokemon.all_moves[i][1],"pokemon_pixel_font.ttf",70,False,2))
+                self.all_moves_outline.append(Button(self,self.move_outline_pos[i][0],self.move_outline_pos[i][1],self.move_outline_pos[i][2],self.move_outline_pos[i][3],(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2))
 
             self.move_back = Button(self,800,550,410,175,(0,0,0),(240,240,240),"Back","pokemon_pixel_font.ttf",70,False,2,disable=True)
             self.move_back_outline = Button(self,795,545,420,185,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",70,False,2,disable=True)
@@ -456,15 +452,9 @@ class mainGame:
                 self.screen.blit(self.run.image,self.run.rect)
 
             if self.text_state == 6:
-
-                self.screen.blit(self.move1_outline.image,self.move1_outline.rect)
-                self.screen.blit(self.move1.image,self.move1.rect)
-                self.screen.blit(self.move2_outline.image,self.move2_outline.rect)
-                self.screen.blit(self.move2.image,self.move2.rect)
-                self.screen.blit(self.move3_outline.image,self.move3_outline.rect)
-                self.screen.blit(self.move3.image,self.move3.rect)
-                self.screen.blit(self.move4_outline.image,self.move4_outline.rect)
-                self.screen.blit(self.move4.image,self.move4.rect)
+                for i in range(len(self.all_moves)):
+                    self.screen.blit(self.all_moves_outline[i].image,self.all_moves_outline[i].rect)
+                    self.screen.blit(self.all_moves[i].image,self.all_moves[i].rect)
 
                 self.screen.blit(self.move_back_outline.image,self.move_back_outline.rect)
                 self.screen.blit(self.move_back.image,self.move_back.rect)
@@ -477,7 +467,7 @@ class mainGame:
                 if self.pokemonai.effective == 2:
                     self.random_move = self.pokemonai.possible_moves[random.randint(0,len(self.pokemonai.possible_moves)-1)]
                 else:
-                    self.random_move = self.encountered_pokemon.all_moves[random.randint(0,3)]
+                    self.random_move = self.encountered_pokemon.all_moves[random.randint(0,len(self.encountered_pokemon.all_moves)-1)]
 
                 self.pokemonai.possible_moves.clear()
                 print(self.move,self.random_move)

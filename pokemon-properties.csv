@@ -26,10 +26,10 @@
 26,Raichu,Electric,,485,60,90,55,90,80,110,1,FALSE
 27,Sandshrew,Ground,,300,50,75,85,20,30,40,1,FALSE
 28,Sandslash,Ground,,450,75,100,110,45,55,65,1,FALSE
-29,Nidoran(F),Poison,,275,55,47,52,40,40,41,1,FALSE
+29,Nidoran-F,Poison,,275,55,47,52,40,40,41,1,FALSE
 30,Nidorina,Poison,,365,70,62,67,55,55,56,1,FALSE
 31,Nidoqueen,Poison,Ground,505,90,92,87,75,85,76,1,FALSE
-32,Nidoran(M),Poison,,273,46,57,40,40,40,50,1,FALSE
+32,Nidoran-M,Poison,,273,46,57,40,40,40,50,1,FALSE
 33,Nidorino,Poison,,365,61,72,57,55,55,65,1,FALSE
 34,Nidoking,Poison,Ground,505,81,102,77,85,75,85,1,FALSE
 35,Clefairy,Fairy,,323,70,45,48,60,65,35,1,FALSE
@@ -80,7 +80,7 @@
 80,Slowbro,Water,Psychic,490,95,75,110,100,80,30,1,FALSE
 81,Magnemite,Electric,Steel,325,25,35,70,95,55,45,1,FALSE
 82,Magneton,Electric,Steel,465,50,60,95,120,70,70,1,FALSE
-83,Farfetch'd,Normal,Flying,352,52,65,55,58,62,60,1,FALSE
+83,Farfetchd,Normal,Flying,352,52,65,55,58,62,60,1,FALSE
 84,Doduo,Normal,Flying,310,35,85,45,35,35,75,1,FALSE
 85,Dodrio,Normal,Flying,460,60,110,70,60,60,100,1,FALSE
 86,Seel,Water,,325,65,45,55,45,70,45,1,FALSE
