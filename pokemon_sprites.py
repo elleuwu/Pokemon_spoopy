@@ -2,9 +2,7 @@ from asyncio.windows_events import NULL
 from difflib import Match
 from distutils.command.config import config
 import pygame, random, threading, csv,time
-
 #Hi from aaban
-
 class SpriteSheet:
     def __init__(self,spritesheet):
         self.spritesheet = pygame.image.load(spritesheet)
@@ -49,8 +47,6 @@ class Block(pygame.sprite.Sprite):
         self.rect.x = self.x
         self.rect.y = self.y
 
-
-
 class Player(pygame.sprite.Sprite):
     def __init__(self,mainGame,config,x,y):
 
@@ -78,7 +74,6 @@ class Player(pygame.sprite.Sprite):
         self.sprite_right0 = mainGame.player_sprites.spec_sprite((172,70,32,32),(136,184,176))
         self.sprite_right1 = mainGame.player_sprites.spec_sprite((206,70,32,32),(136,184,176))
         self.sprite_right2 = mainGame.player_sprites.spec_sprite((274,70,32,32),(136,184,176))
-
 
         self.images_right = [self.sprite_right0,self.sprite_right1,self.sprite_right0,self.sprite_right2]
         self.images_left = [self.sprite_left0,self.sprite_left1,self.sprite_left0,self.sprite_left2]
@@ -119,7 +114,6 @@ class Player(pygame.sprite.Sprite):
         self.collide_enemy("y")
         self.collide_grass()
 
-
         self.x_change = 0
         self.y_change = 0
 
@@ -136,7 +130,6 @@ class Player(pygame.sprite.Sprite):
                 self.current_frame = 0
                 self.index = (self.index + 1) % len(self.images_right)
                 self.image = self.images_right[self.index]
-
 
         elif keys[pygame.K_d]:
             for sprite in self.mainGame.all_sprite_group:
@@ -174,8 +167,6 @@ class Player(pygame.sprite.Sprite):
                 self.index = (self.index + 1) % len(self.images_down)
                 self.image = self.images_down[self.index]
 
-
-
     def collide(self,direction):
         if direction == "x":
             hits = pygame.sprite.spritecollide(self,self.mainGame.env_sprite_group_col,False)
@@ -191,7 +182,6 @@ class Player(pygame.sprite.Sprite):
                     for sprite in self.mainGame.all_sprite_group:
                         sprite.rect.x -= self.velocity
 
-
         if direction == "y":
             hits = pygame.sprite.spritecollide(self,self.mainGame.env_sprite_group_col, False)
 
@@ -205,7 +195,6 @@ class Player(pygame.sprite.Sprite):
                     self.rect.y = hits[0].rect.bottom
                     for sprite in self.mainGame.all_sprite_group:
                         sprite.rect.y -= self.velocity
-
 
     def collide_enemy(self,direction):
         hits = pygame.sprite.spritecollide(self,self.mainGame.enemy_sprite_group,False)
@@ -235,7 +224,6 @@ class Player(pygame.sprite.Sprite):
                         sprite.rect.y -= self.velocity
                     self.mainGame.talk_trainer = True
 
-
     def collide_grass(self):
         hits = pygame.sprite.spritecollide(self,self.mainGame.grass_sprite_group,False)
 
@@ -247,7 +235,6 @@ class Player(pygame.sprite.Sprite):
                 pass
             else:
                 self.mainGame.canEncounter = False
-
 
 class Ground(pygame.sprite.Sprite):
     def __init__(self,mainGame,config,x,y):
@@ -420,7 +407,6 @@ class Button:
             self.text_rect = self.text.get_rect(center=(self.width/2,self.height/2))
             self.image.blit(self.text,self.text_rect)
 
-
 class Enemy(pygame.sprite.Sprite):
     def __init__(self,mainGame,config,x,y,rectx,recty):
         self.mainGame = mainGame
@@ -460,7 +446,6 @@ class WildGrassEncounters(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.y = self.y
-
 
     def update(self):
         pass
@@ -522,116 +507,92 @@ class pokemon_prop():
         match self.nature:
             case self.mainGame.pkmn_natures.Hardy:
                 print(self.nature)
-
             case self.mainGame.pkmn_natures.Lonely:
                 print(self.nature)
                 self.atk*=1.1
                 self.defn*=0.9
-
             case self.mainGame.pkmn_natures.Brave:
                 print(self.nature)
                 self.atk*=1.1
                 self.speed*=0.9
-
             case self.mainGame.pkmn_natures.Adamant:
                 print(self.nature)
                 self.atk*=1.1
                 self.spA*=0.9
-
             case self.mainGame.pkmn_natures.Naughty:
                 print(self.nature)
                 self.atk*=1.1
                 self.spD*=0.9
-
             case self.mainGame.pkmn_natures.Bold:
                 print(self.nature)
                 self.atk*=0.9
                 self.defn*=1.1
-
             case self.mainGame.pkmn_natures.Docile:
                 print(self.nature)
-
             case self.mainGame.pkmn_natures.Relaxed:
                 print(self.nature)
                 self.speed*=0.9
                 self.defn*=1.1
-
             case self.mainGame.pkmn_natures.Impish:
                 print(self.nature)
                 self.spA*=0.9
                 self.defn*=1.1
-
             case self.mainGame.pkmn_natures.Lax:
                 print(self.nature)
                 self.spD*=0.9
                 self.defn*=1.1
-
             case self.mainGame.pkmn_natures.Timid:
                 print(self.nature)
                 self.atk*=0.9
                 self.speed*=1.1
-
             case self.mainGame.pkmn_natures.Hasty:
                 print(self.nature)
                 self.defn*=0.9
                 self.speed*=1.1
-
             case self.mainGame.pkmn_natures.Serious:
                 print(self.nature)
-
             case self.mainGame.pkmn_natures.Jolly:
                 print(self.nature)
                 self.spA*=0.9
                 self.speed*=1.1
-
             case self.mainGame.pkmn_natures.Naive:
                 print(self.nature)
                 self.spD*=0.9
                 self.speed*=1.1
-
             case self.mainGame.pkmn_natures.Modest:
                 print(self.nature)
                 self.spA*=1.1
                 self.atk*=0.9
-
             case self.mainGame.pkmn_natures.Mild:
                 print(self.nature)
                 self.spA*=1.1
                 self.defn*=0.9
-
             case self.mainGame.pkmn_natures.Quiet:
                 print(self.nature)
                 self.spA*=1.1
                 self.speed*=0.9
-
             case self.mainGame.pkmn_natures.Bashful:
                 print(self.nature)
-
             case self.mainGame.pkmn_natures.Rash:
                 print(self.nature)
                 self.spA*=1.1
                 self.spD*=0.9
-
             case self.mainGame.pkmn_natures.Calm:
                 print(self.nature)
                 self.spD*=1.1
                 self.atk*=0.9
-
             case self.mainGame.pkmn_natures.Gentle:
                 print(self.nature)
                 self.spD*=1.1
                 self.defn*=0.9
-
             case self.mainGame.pkmn_natures.Sassy:
                 print(self.nature)
                 self.spD*=1.1
                 self.speed*=0.9
-
             case self.mainGame.pkmn_natures.Careful:
                 print(self.nature)
                 self.spA*=0.9
                 self.spD*=1.1
-
             case self.mainGame.pkmn_natures.Quirky:
                 print(self.nature)
 
@@ -660,7 +621,6 @@ class pokemon_prop():
                 if lines[1] == self.all_moves[i]:
                     self.all_moves[i] = lines
 
-
 class Pokemon(pygame.sprite.Sprite,pokemon_prop):
     def __init__(self,mainGame,config,x,y,rect,num):
         self.mainGame = mainGame
@@ -668,7 +628,6 @@ class Pokemon(pygame.sprite.Sprite,pokemon_prop):
         self._layer = self.config.POKEMON_LAYER
         self.groups = self.mainGame.pokemon_sprite_group, self.mainGame.battle_sprite_group
         pygame.sprite.Sprite.__init__(self,self.groups)
-
 
         self.x = x*self.config.TILESIZE
         self.y = y*self.config.TILESIZE
@@ -678,7 +637,6 @@ class Pokemon(pygame.sprite.Sprite,pokemon_prop):
         self.image_surface = self.mainGame.pokemon_sprites_f1.spec_sprite(rect,(0,0,0))
         self.image_rect = self.image_surface.get_rect()
         self.image_vector = pygame.math.Vector2((self.image_rect.width,self.image_rect.height))
-
 
         self.frame2 = self.mainGame.pokemon_sprites_f2.spec_sprite(rect,(0,0,0))
         self.images_anim = [self.frame2,self.image_surface]
@@ -695,7 +653,6 @@ class Pokemon(pygame.sprite.Sprite,pokemon_prop):
 
         self.pokemon_num = num
         pokemon_prop.__init__(self,self.mainGame,self.config,self.pokemon_num)
-
 
     def update(self):
         self.idle()
@@ -860,10 +817,3 @@ class pokemonAI():
             if self.mainGame.calc_damage(self.pokemon.all_moves[i],self.pokemon,self.target)[3] == 2:
                 self.effective = 2
                 self.possible_moves.append(self.pokemon.all_moves[i])
-
-
-
-
-
-
-        

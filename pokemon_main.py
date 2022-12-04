@@ -6,9 +6,6 @@ from pokemon_config import *
 from pokemon_sprites import *
 
 class mainGame:
-    
-    """Class to manage the game assets and behaviour"""
-
     def __init__(self):
         pygame.init()
 
@@ -122,7 +119,6 @@ class mainGame:
                     self.trainer = Enemy(self,self.config,j,i,(self.config.TILESIZE*random.randrange(0,30)),(self.config.TILESIZE*random.randrange(0,21)))
                     self.trainer_pos.append(self.trainer.rect)
 
-
     def run_game(self):
         self.start_screen()
         if pygame.mixer.get_init():
@@ -165,8 +161,6 @@ class mainGame:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_q:
                     sys.exit()
-
-
 
     def encounter_events(self):
 
@@ -241,8 +235,6 @@ class mainGame:
                                             self.text_state = 5
                                             self.turn +=1
 
-
-
                     elif self.text_state == 12:
                         if self.mainText.is_pressed(event.pos):
                             self.dmg_once = False
@@ -296,13 +288,11 @@ class mainGame:
                             else:   
                                 self.text_state = 9
 
-
         if self.canEncounter == True:
             if not self.enc_timer_started:
                 print("thread started")
                 self.enc_timer_started = True
                 self.enc_timer.start()
-
 
     def wild_battle(self):
         if self.random_encounter_chance <= 0.11 and self.random_encounter_chance>0:
@@ -375,7 +365,6 @@ class mainGame:
             rect = pygame.Rect((pkmn_x*80)-80,pkmn_y*80,80,80)
         return rect
         
-
     def updates(self):
         self.all_sprite_group.update()
 
@@ -516,7 +505,6 @@ class mainGame:
                 effective = 1
             else:
                 type1_dmg = 1
-
             if def_pokemon.type2 == "Grass" or def_pokemon.type2 == "Ice" or def_pokemon.type2 == "Bug" or def_pokemon.type2 == "Steel":
                 type2_dmg = 2
                 effective = 2
@@ -534,7 +522,6 @@ class mainGame:
                 type1_dmg = 0
             else:
                 type1_dmg = 1
-
             if def_pokemon.type2 == "Rock" or def_pokemon.type2 == "Steel":
                 type2_dmg = 0.5
                 effective = 1
@@ -554,7 +541,6 @@ class mainGame:
                 type1_dmg = 0
             else:
                 type1_dmg = 1
-
             if def_pokemon.type2 == "Normal" or def_pokemon.type2 == "Rock" or def_pokemon.type2 == "Steel" or def_pokemon.type2 == "Ice" or def_pokemon.type2 == "Dark":
                 type2_dmg = 2
                 effective = 2
@@ -575,7 +561,6 @@ class mainGame:
                 effective = 1
             else:
                 type1_dmg = 1
-
             if def_pokemon.type2 == "Ground" or def_pokemon.type2 == "Rock" or def_pokemon.type2 == "Fire":
                 type2_dmg = 2
                 effective = 2
@@ -594,7 +579,6 @@ class mainGame:
                 effective = 1
             else:
                 type1_dmg = 1
-
             if def_pokemon.type2 == "Fighting" or def_pokemon.type2 == "Bug" or def_pokemon.type2 == "Grass":
                 type2_dmg = 2
                 effective = 2
@@ -613,7 +597,6 @@ class mainGame:
                 effective = 1
             else:
                 type1_dmg = 1
-
             if def_pokemon.type2 == "Ground" or def_pokemon.type2 == "Rock" or def_pokemon.type2 == "Water":
                 type2_dmg = 2
                 effective = 2
@@ -634,7 +617,6 @@ class mainGame:
                 type1_dmg = 0
             else:
                 type1_dmg = 1
-
             if def_pokemon.type2 == "Grass" or def_pokemon.type2 == "Fairy":
                 type2_dmg = 2
                 effective = 2
@@ -657,7 +639,6 @@ class mainGame:
                 type1_dmg = 0
             else:
                 type1_dmg = 1
-
             if def_pokemon.type2 == "Flying" or def_pokemon.type2 == "Water":
                 type2_dmg = 2
                 effective = 2
@@ -680,7 +661,6 @@ class mainGame:
                 type1_dmg = 0
             else:
                 type1_dmg = 1
-
             if def_pokemon.type2 == "Poison" or def_pokemon.type2 == "Rock" or def_pokemon.type2 == "Steel" or def_pokemon.type2 == "Fire" or def_pokemon.type2 == "Electric":
                 type2_dmg = 2
                 effective = 2
@@ -703,7 +683,6 @@ class mainGame:
                 type1_dmg = 0
             else:
                 type1_dmg = 1
-
             if def_pokemon.type2 == "Fighting" or def_pokemon.type2 == "Poison":
                 type2_dmg = 2
                 effective = 2
@@ -724,7 +703,6 @@ class mainGame:
                 effective = 1
             else:
                 type1_dmg = 1
-
             if def_pokemon.type2 == "Flying" or def_pokemon.type2 == "Bug" or def_pokemon.type2 == "Fire" or def_pokemon.type2 == "Ice":
                 type2_dmg = 2
                 effective = 2
@@ -743,7 +721,6 @@ class mainGame:
                 effective = 1
             else:
                 type1_dmg = 1
-
             if def_pokemon.type2 == "Flying" or def_pokemon.type2 == "Ground" or def_pokemon.type2 == "Grass" or def_pokemon.type2 == "Dragon":
                 type2_dmg = 2
                 effective = 2
@@ -762,7 +739,6 @@ class mainGame:
                 effective = 1
             else:
                 type1_dmg = 1
-
             if def_pokemon.type2 == "Grass" or def_pokemon.type2 == "Psychic" or def_pokemon.type2 == "Dark":
                 type2_dmg = 2
                 effective = 2
@@ -783,7 +759,6 @@ class mainGame:
                 type1_dmg = 0
             else:
                 type1_dmg = 1
-
             if def_pokemon.type2 == "Dragon":
                 type2_dmg = 2
                 effective = 2
@@ -806,7 +781,6 @@ class mainGame:
                 type1_dmg = 0
             else:
                 type1_dmg = 1
-
             if def_pokemon.type2 == "Ghost" or def_pokemon.type2 == "Psychic":
                 type2_dmg = 2
                 effective = 2
@@ -827,7 +801,6 @@ class mainGame:
                 effective = 1
             else:
                 type1_dmg = 1
-
             if def_pokemon.type2 == "Ghost" or def_pokemon.type2 == "Psychic":
                 type2_dmg = 2
                 effective = 2
@@ -846,7 +819,6 @@ class mainGame:
                 effective = 1
             else:
                 type1_dmg = 1
-
             if def_pokemon.type2 == "Rock" or def_pokemon.type2 == "Ice" or def_pokemon.type2 == "Fairy":
                 type2_dmg = 2
                 effective = 2
@@ -865,7 +837,6 @@ class mainGame:
                 effective = 1
             else:
                 type1_dmg = 1
-
             if def_pokemon.type2 == "Fighting" or def_pokemon.type2 == "Dragon" or def_pokemon.type2 == "Dark":
                 type2_dmg = 2
                 effective = 2
@@ -904,8 +875,6 @@ class mainGame:
         int_damage = round(damage)
         move_name = move_used[1]
         print(int_damage)
-
-
         properties = [int_damage,crit,move_name,effective]
         return properties
     
@@ -960,7 +929,6 @@ class mainGame:
         options_n = Button(self,800,660,100,45,(0,0,0),color,"No","pokemon_pixel_font.ttf",60,False,1)
         options_outline_n = Button(self,795,655,110,55,(0,0,0),(0,0,0),"","pokemon_pixel_font.ttf",60,False,1)
 
-
         self.screen.blit(text_box.image,text_box.rect)
         self.screen.blit(trainer_name,trainer_name_rect)
 
@@ -988,7 +956,6 @@ class mainGame:
                     if options_n.is_pressed(event.pos):
                         self.talk_trainer = False
 
-       
         pygame.display.update()
 
     def encounter_timer(self):
@@ -1000,10 +967,6 @@ class mainGame:
                 self.random_encounter_chance = 1.1
 
             time.sleep(random.uniform(1.5, 2.5))
-
-
-
-
 
 if __name__ == "__main__":
     game = mainGame()
