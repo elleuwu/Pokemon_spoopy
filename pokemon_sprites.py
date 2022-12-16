@@ -759,6 +759,7 @@ class hp_bars():
         self.rect = pygame.Rect(rect)
         self.nameFont = pygame.font.Font(font,60)
         self.lvlFont = pygame.font.Font(font,60)
+        self.hpFont = pygame.font.Font(font,45)
 
         self.background = pygame.Surface((self.rect.width-10,self.rect.height-10))
         self.background.fill((240,240,240))
@@ -773,20 +774,26 @@ class hp_bars():
         if self.pokemon.hp_change > self.pokemon.current_hp:
             if self.pokemon.hp_change == 0:
                 self.hp_fill = pygame.Surface((0,0))
+                self.hp_values = self.hpFont.render(f"0/{self.max_hp}",True,(255,255,255))
                 self.mainGame.fainted = True
                 self.hp_anim = False
             else:
                 self.hp_anim = True
                 self.hp_percentage = (self.pokemon.hp_change/self.max_hp)
                 self.hp_fill = pygame.Surface(((290*self.hp_percentage),30))
+                self.hp_values = self.hpFont.render(f"{self.pokemon.hp_change}/{self.max_hp}",True,(255,255,255))
                 self.pokemon.hp_change -=1
+                time.sleep(0.05)
         else:
             self.hp_anim = False
             self.hp_percentage = (self.pokemon.current_hp/self.max_hp)
             self.hp_fill = pygame.Surface(((290*self.hp_percentage),30))
+            self.hp_values = self.hpFont.render(f"{self.pokemon.current_hp}/{self.max_hp}",True,(255,255,255))
 
         self.hp_fill.fill((0,230,0))
         self.hp_fill_rect = self.hp_fill.get_rect(x=5,y=5)
+
+        self.hp_values_rect = self.hp_values.get_rect(x=10,y=2)
 
         self.pkmn_name = self.nameFont.render(f"{self.name}",True,(0,0,0))
         self.name_rect = self.pkmn_name.get_rect(x=10,y=10)
@@ -798,6 +805,7 @@ class hp_bars():
         self.hp_rect = self.pkmn_hp.get_rect(x=25,y=70)
 
         self.bar.blit(self.hp_fill,self.hp_fill_rect)
+        self.bar.blit(self.hp_values,self.hp_values_rect)
         self.background.blit(self.bar,self.bar_rect)
         self.background.blit(self.pkmn_hp,self.hp_rect)
         self.background.blit(self.pkmn_name,self.name_rect)
